@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { PawPrint, Search, XCircle, Dog, Cat, Bird, Rabbit } from 'lucide-react';
 
 // --- MOCK DATA ---
-// In a real application, you would fetch this data from an API.
 const allPets = [
   { id: 1, name: 'Buddy', type: 'Dog', breed: 'Golden Retriever', age: 2, gender: 'Male', size: 'Large', location: 'Sunnyvale, CA', image: 'https://placehold.co/300x300/f8b400/ffffff?text=Buddy', description: 'Friendly and energetic, loves to play fetch.' },
   { id: 2, name: 'Lucy', type: 'Dog', breed: 'Labrador Retriever', age: 3, gender: 'Female', size: 'Large', location: 'Austin, TX', image: 'https://placehold.co/300x300/d97706/ffffff?text=Lucy', description: 'Sweet-natured and great with kids.' },
