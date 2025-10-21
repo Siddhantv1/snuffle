@@ -5,58 +5,9 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 import PetListings from './components/PetListings';
 
-function App() {
-  const [isFloating, setIsFloating] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      // Trigger floating state after scrolling down a bit
-      setIsFloating(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
+function Home() {
   return (
-    <div className="bg-amber-50 min-h-screen font-sans">
-      {/* --- HEADER / NAVBAR --- */}
-      <header
-        className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 ease-in-out ${
-          isFloating
-            ? 'bg-white/90 backdrop-blur-sm shadow-lg rounded-full max-w-screen-md' // Floating pill style
-            : 'bg-transparent shadow-none w-full max-w-screen-lg' // Initial transparent style
-        }`}
-      >
-        <nav className="container mx-auto px-6 py-3">
-          <div className="flex items-center justify-between">
-            {/* Brand Logo */}
-            <a href="#" className="flex items-center gap-2 text-2xl font-bold text-gray-900">
-              <PawPrint className="text-amber-500 h-7 w-7" />
-              <span className={isFloating ? 'text-xl' : 'text-2xl'}>Snuffle</span>
-            </a>
-            
-            {/* Navigation Links (hidden on small screens) */}
-            <div className="hidden md:flex items-center space-x-8 px-8">
-              <a href="#" className="text-gray-700 hover:text-amber-600 transition-colors">Home</a>
-              <a href="#" className="text-gray-700 hover:text-amber-600 transition-colors">Pet Listings</a>
-              <a href="#" className="text-gray-700 hover:text-amber-600 transition-colors">Contact us</a>
-            </div>
-            
-            {/* Sign In Button */}
-            <a 
-              href="#" 
-              className={`text-white bg-amber-500 hover:bg-amber-600 font-medium rounded-full text-sm transition-all duration-300 ${
-                isFloating ? 'px-5 py-2' : 'px-6 py-3' // Button shrinks with nav
-              }`}
-            >
-              Sign In
-            </a>
-          </div>
-        </nav>
-      </header>
-
-      {/* --- MAIN CONTENT --- */}
-      <main>
+    <main>
         {/* --- Hero Section --- */}
         <section className="min-h-screen flex items-center pt-24 pb-12">
           <div className="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
@@ -172,25 +123,85 @@ function App() {
           </div>
         </section>
       </main>
-
-      {/* --- FOOTER --- */}
-      <footer className="bg-gray-800 text-gray-300 py-12">
-        <div className="container mx-auto px-6 text-center">
-          <a href="#" className="flex justify-center items-center gap-2 text-2xl font-bold text-white mb-4">
-            <PawPrint className="text-amber-500 h-7 w-7" />
-            Snuffle
-          </a>
-          <p className="mb-4">Helping you find your new best friend.</p>
-          <div className="flex justify-center space-x-6 mb-6">
-            <a href="#" className="hover:text-white">Facebook</a>
-            <a href="#" className="hover:text-white">Instagram</a>
-            <a href="#" className="hover:text-white">Twitter</a>
-          </div>
-          <p className="text-gray-500 text-sm">&copy; {new Date().getFullYear()} Snuffle. All rights reserved.</p>
-        </div>
-      </footer>
-    </div>
   );
 }
+function App() {
+  const [isFloating, setIsFloating] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsFloating(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <Router>
+      <div className="bg-amber-50 min-h-screen font-sans">
+        {/* --- HEADER / NAVBAR --- */}
+        <header
+          className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 ease-in-out ${
+            isFloating
+              ? 'bg-white/90 backdrop-blur-sm shadow-lg rounded-full max-w-screen-md'
+              : 'bg-transparent shadow-none w-full max-w-screen-lg'
+          }`}
+        >
+          <nav className="container mx-auto px-6 py-3">
+            <div className="flex items-center justify-between">
+              {/* Logo */}
+              <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-gray-900">
+                <PawPrint className="text-amber-500 h-7 w-7" />
+                <span className={isFloating ? 'text-xl' : 'text-2xl'}>Snuffle</span>
+              </Link>
+
+              {/* Navigation Links */}
+              <div className="hidden md:flex items-center space-x-8 px-8">
+                <Link to="/" className="text-gray-700 hover:text-amber-600 transition-colors">Home</Link>
+                <Link to="/petlistings" className="text-gray-700 hover:text-amber-600 transition-colors">Pet Listings</Link>
+                <Link to="/contact" className="text-gray-700 hover:text-amber-600 transition-colors">Contact us</Link>
+              </div>
+
+              {/* Sign In */}
+              <Link
+                to="/signin"
+                className={`text-white bg-amber-500 hover:bg-amber-600 font-medium rounded-full text-sm transition-all duration-300 ${
+                  isFloating ? 'px-5 py-2' : 'px-6 py-3'
+                }`}
+              >
+                Sign In
+              </Link>
+            </div>
+          </nav>
+        </header>
+
+        {/* --- MAIN ROUTING AREA --- */}
+        <div className="pt-32">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/petlistings" element={<PetListings />} />
+            
+          </Routes>
+        </div>
+
+        {/* --- FOOTER --- */}
+        <footer className="bg-gray-800 text-gray-300 py-12 mt-24">
+          <div className="container mx-auto px-6 text-center">
+            <Link to="/" className="flex justify-center items-center gap-2 text-2xl font-bold text-white mb-4">
+              <PawPrint className="text-amber-500 h-7 w-7" />
+              Snuffle
+            </Link>
+            <p className="mb-4">Helping you find your new best friend.</p>
+            <div className="flex justify-center space-x-6 mb-6">
+              <a href="#" className="hover:text-white">Facebook</a>
+              <a href="#" className="hover:text-white">Instagram</a>
+              <a href="#" className="hover:text-white">Twitter</a>
+            </div>
+            <p className="text-gray-500 text-sm">&copy; {new Date().getFullYear()} Snuffle. All rights reserved.</p>
+          </div>
+        </footer>
+      </div>
+    </Router>
+  );
+}
+
 
 export default App;
