@@ -36,7 +36,7 @@ export default function PetDetails() {
       <div className="container mx-auto px-4 py-8">
         <button
           onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-2 text-amber-600 font-bold mb-6 group"
+          className="cursor-pointer inline-flex items-center gap-2 text-amber-600 font-bold mb-6 group"
         >
           <ArrowLeft size={20} className="cursor-pointer transition-transform group-hover:-translate-x-1" />
           Back to Listings

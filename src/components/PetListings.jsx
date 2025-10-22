@@ -70,8 +70,8 @@ const Filters = ({ filters, setFilters, onClear }) => {
         </div>
       </div>
       <div className="mt-4 flex justify-end">
-        <button onClick={onClear} className="flex items-center text-gray-600 hover:text-amber-600 transition-colors">
-          <XCircle size={18} className="mr-1" />
+        <button onClick={onClear} className="cursor-pointer flex items-center text-gray-600 hover:text-amber-600 transition-colors">
+          <XCircle size={18} className="cursor-pointer mr-1" />
           Clear Filters
         </button>
       </div>
