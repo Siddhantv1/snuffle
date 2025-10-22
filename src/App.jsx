@@ -149,7 +149,7 @@ function App() {
             <div className="flex items-center justify-between">
               {/* Logo */}
               <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-gray-900">
-                <PawPrint className="text-amber-500 h-7 w-7" />
+                <p className="text-amber-500 h-7 w-7">🐾</p>
                 <span className={isFloating ? 'text-xl' : 'text-2xl'}>Snuffle</span>
               </Link>
 
@@ -186,7 +186,7 @@ function App() {
         <footer className="bg-gray-800 text-gray-300 py-12 mt-24">
           <div className="container mx-auto px-6 text-center">
             <Link to="/" className="flex justify-center items-center gap-2 text-2xl font-bold text-white mb-4">
-              <PawPrint className="text-amber-500 h-7 w-7" />
+              <p className="text-amber-500 h-7 w-7">🐾</p>
               Snuffle
             </Link>
             <p className="mb-4">Helping you find your new best friend.</p>
