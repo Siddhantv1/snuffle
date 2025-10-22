@@ -91,7 +91,7 @@ const Header = () => (
 );
 
 // Main App Component
-export default function App() {
+function App() {
   const initialFilters = { type: '', breed: '', age: '15', location: '' };
   const [filters, setFilters] = useState(initialFilters);
 
@@ -141,3 +141,5 @@ export default function App() {
     </div>
   );
 }
+
+export default App;
