@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { PawPrint, Search, XCircle, Dog, Cat, Bird, Rabbit } from 'lucide-react';
 import allPets from '../data/petsdata.js';
-
+import { Link } from 'react-router-dom';
 // --- MOCK DATA ---
 
 
@@ -9,6 +9,7 @@ import allPets from '../data/petsdata.js';
 
 // A single pet card component
 const PetCard = ({ pet }) => (
+  <Link to={`/pet/${pet.id}`}>
   <div className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 ease-in-out">
     <img className="w-full h-48 object-cover" src={pet.image} alt={pet.name} />
     <div className="p-4">
@@ -19,11 +20,12 @@ const PetCard = ({ pet }) => (
         <span>{pet.gender}</span>
       </div>
       <p className="text-gray-700 text-sm mb-4 h-10">{pet.description}</p>
-      <button className="w-full bg-amber-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-amber-600 transition-colors duration-300">
+      <button className="cursor-pointer w-full bg-amber-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-amber-600 transition-colors duration-300">
         Adopt Me
       </button>
     </div>
   </div>
+  </Link>
 );
 
 // Filtering controls component
