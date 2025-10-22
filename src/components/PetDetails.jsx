@@ -26,7 +26,7 @@ export default function PetDetails() {
     return (
         <div className='text-center p-10'>
             <h2 className='text-2xl text-gray-700'>Pet Not Found</h2>
-            <button onClick={() => navigate('/')} className='mt-4 bg-amber-500 text-white px-4 py-2 rounded-lg'>Back to listings</button>
+            <button onClick={() => navigate('/')} className='cursor-pointer mt-4 bg-amber-500 text-white px-4 py-2 rounded-lg'>Back to listings</button>
         </div>
     );
   }
@@ -38,7 +38,7 @@ export default function PetDetails() {
           onClick={() => navigate(-1)}
           className="inline-flex items-center gap-2 text-amber-600 font-bold mb-6 group"
         >
-          <ArrowLeft size={20} className="transition-transform group-hover:-translate-x-1" />
+          <ArrowLeft size={20} className="cursor-pointer transition-transform group-hover:-translate-x-1" />
           Back to Listings
         </button>
 
