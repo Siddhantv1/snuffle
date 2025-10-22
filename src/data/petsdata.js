@@ -1,0 +1,16 @@
+const allPets = [
+  { id: 1, name: 'Buddy', type: 'Dog', breed: 'Golden Retriever', age: 2, gender: 'Male', size: 'Large', location: 'Sunnyvale, CA', image: 'https://placehold.co/300x300/f8b400/ffffff?text=Buddy', description: 'Friendly and energetic, loves to play fetch.' },
+  { id: 2, name: 'Lucy', type: 'Dog', breed: 'Labrador Retriever', age: 3, gender: 'Female', size: 'Large', location: 'Austin, TX', image: 'https://placehold.co/300x300/d97706/ffffff?text=Lucy', description: 'Sweet-natured and great with kids.' },
+  { id: 3, name: 'Whiskers', type: 'Cat', breed: 'Siamese', age: 1, gender: 'Male', size: 'Small', location: 'New York, NY', image: 'https://placehold.co/300x300/a3e635/ffffff?text=Whiskers', description: 'A curious and vocal companion.' },
+  { id: 4, name: 'Mochi', type: 'Cat', breed: 'Domestic Shorthair', age: 5, gender: 'Female', size: 'Medium', location: 'Seattle, WA', image: 'https://placehold.co/300x300/84cc16/ffffff?text=Mochi', description: 'Loves napping in sunbeams and gentle pets.' },
+  { id: 5, name: 'Kiwi', type: 'Bird', breed: 'Parakeet', age: 1, gender: 'Male', size: 'Small', location: 'Miami, FL', image: 'https://placehold.co/300x300/22c55e/ffffff?text=Kiwi', description: 'A cheerful bird who loves to sing.' },
+  { id: 6, name: 'Thumper', type: 'Rabbit', breed: 'Holland Lop', age: 2, gender: 'Male', size: 'Small', location: 'Denver, CO', image: 'https://placehold.co/300x300/10b981/ffffff?text=Thumper', description: 'Loves carrots and hopping around.' },
+  { id: 7, name: 'Rocky', type: 'Dog', breed: 'German Shepherd', age: 4, gender: 'Male', size: 'Large', location: 'Chicago, IL', image: 'https://placehold.co/300x300/f59e0b/ffffff?text=Rocky', description: 'Loyal, intelligent, and protective.' },
+  { id: 8, name: 'Cleo', type: 'Cat', breed: 'Maine Coon', age: 2, gender: 'Female', size: 'Large', location: 'Boston, MA', image: 'https://placehold.co/300x300/65a30d/ffffff?text=Cleo', description: 'A gentle giant with a fluffy coat.' },
+  { id: 9, name: 'Zazu', type: 'Bird', breed: 'Cockatiel', age: 3, gender: 'Female', size: 'Small', location: 'Phoenix, AZ', image: 'https://placehold.co/300x300/16a34a/ffffff?text=Zazu', description: 'Can whistle tunes and enjoys head scratches.' },
+  { id: 10, name: 'Bella', type: 'Dog', breed: 'Poodle', age: 1, gender: 'Female', size: 'Small', location: 'Los Angeles, CA', image: 'https://placehold.co/300x300/eab308/ffffff?text=Bella', description: 'Smart, hypoallergenic, and very cuddly.' },
+  { id: 11, name: 'Oreo', type: 'Rabbit', breed: 'Dutch', age: 1, gender: 'Male', size: 'Medium', location: 'Portland, OR', image: 'https://placehold.co/300x300/059669/ffffff?text=Oreo', description: 'A curious rabbit with a playful spirit.' },
+  { id: 12, name: 'Smokey', type: 'Cat', breed: 'Russian Blue', age: 6, gender: 'Male', size: 'Medium', location: 'San Francisco, CA', image: 'https://placehold.co/300x300/4d7c0f/ffffff?text=Smokey', description: 'A quiet and reserved cat who warms up.' },
+];
+
+export default allPets;
