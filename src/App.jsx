@@ -4,6 +4,7 @@ import { PawPrint, Heart, ClipboardList, Users, Search, ArrowRight } from 'lucid
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 import PetListings from './components/PetListings';
+import PetDetails from './components/PetDetails';
 
 function Home() {
   return (
@@ -178,7 +179,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/petlistings" element={<PetListings />} />
-            
+             <Route path="/pet/:id" element={<PetDetails />} />
           </Routes>
         </div>
 
