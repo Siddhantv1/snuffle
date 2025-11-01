@@ -103,7 +103,7 @@ function Home() {
             {/* See All Button */}
             <a
               href="/petlistings"
-              className="inline-flex items-center gap-2 mt-12 bg-white text-amber-600 font-bold py-3 px-6 rounded-full text-lg border-2 border-amber-500 shadow-sm hover:bg-amber-500 hover:text-amber-100 transition-colors duration-150"
+              className="inline-flex items-center gap-2 mt-12 bg-white text-amber-600 font-bold py-3 px-6 rounded-full text-lg border-2 border-amber-500 shadow-sm hover:bg-amber-500 hover:text-white transition-colors duration-300"
             >
               See All Pets
               <ArrowRight className="h-5 w-5" />
