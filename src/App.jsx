@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import './App.css';
+import './index.css';
 import { PawPrint, Heart, ClipboardList, Users, Search, ArrowRight } from 'lucide-react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 import PetListings from './components/PetListings';
 import PetDetails from './components/PetDetails';
+import allPets from './data/petsdata';
 
 function Home() {
   return (
@@ -33,9 +34,9 @@ function Home() {
             {/* Hero Image */}
             <div className="flex justify-center">
               <img 
-                src="https://placehold.co/600x600/f8b400/ffffff?text=Happy+Adopted+Dog" 
+                src="https://images.unsplash.com/photo-1503256207526-0d5d80fa2f47?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Ym9yZGVyJTIwY29sbGllfGVufDB8fDB8fHww&fm=jpg&q=60&w=3000" 
                 alt="Happy adopted dog"
-                className="rounded-3xl shadow-2xl w-full max-w-md"
+                className="rounded-3xl shadow-2xl w-full h-full object-cover"
               />
             </div>
           </div>
@@ -80,43 +81,29 @@ function Home() {
           <div className="container mx-auto px-6 text-center">
             <h2 className="text-4xl font-bold text-gray-800 mb-12">Meet Some Friends</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-              {/* Pet Card 1 */}
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-                <img src="https://placehold.co/300x300/f8b400/ffffff?text=Buddy" alt="Dog" className="w-full h-48 object-cover"/>
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-800">Buddy</h3>
-                  <p className="text-gray-600 text-sm">2-year-old Golden Retriever</p>
+              {allPets.slice(0, 4).map((pet) => (
+                <div 
+                  key={pet.id}
+                  className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300"
+                >
+                  <img 
+                    src={pet.image} 
+                    alt={pet.name} 
+                    className="w-full h-48 object-cover" 
+                  />
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold text-gray-800">{pet.name}</h3>
+                    <p className="text-gray-600 text-sm">
+                      {pet.age}-year-old {pet.breed}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              {/* Pet Card 2 */}
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-                <img src="https://placehold.co/300x300/a3e635/ffffff?text=Whiskers" alt="Cat" className="w-full h-48 object-cover"/>
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-800">Whiskers</h3>
-                  <p className="text-gray-600 text-sm">1-year-old Siamese</p>
-                </div>
-              </div>
-              {/* Pet Card 3 */}
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-                <img src="https://placehold.co/300x300/f59e0b/ffffff?text=Rocky" alt="Dog" className="w-full h-48 object-cover"/>
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-800">Rocky</h3>
-                  <p className="text-gray-600 text-sm">3-year-old German Shepherd</p>
-                </div>
-              </div>
-              {/* Pet Card 4 */}
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-                <img src="https://placehold.co/300x300/84cc16/ffffff?text=Mochi" alt="Cat" className="w-full h-48 object-cover"/>
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-800">Mochi</h3>
-                  <p className="text-gray-600 text-sm">5-year-old Domestic Shorthair</p>
-                </div>
-              </div>
+              ))}
             </div>
             {/* See All Button */}
-            <a 
-              href="#" 
-              className="inline-flex items-center gap-2 mt-12 bg-white text-amber-600 font-bold py-3 px-6 rounded-full text-lg hover:bg-gray-100 transition-colors duration-300 border border-amber-500 shadow-sm"
+            <a
+              href="/petlistings"
+              className="inline-flex items-center gap-2 mt-12 bg-white text-amber-600 font-bold py-3 px-6 rounded-full text-lg border-2 border-amber-500 shadow-sm hover:bg-amber-500 hover:text-amber-100 transition-colors duration-150"
             >
               See All Pets
               <ArrowRight className="h-5 w-5" />
