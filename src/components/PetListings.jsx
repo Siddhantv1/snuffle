@@ -1,26 +1,24 @@
 import React, { useState, useMemo } from 'react';
-import { PawPrint, Search, XCircle, Dog, Cat, Bird, Rabbit } from 'lucide-react';
-import allPets from '../data/petsdata.js';
+import { PawPrint, Search, XCircle, Dog, Cat, Bird, Rabbit, Plus } from 'lucide-react';
+// import allPets from '../data/petsdata.js'; // <--
 import { Link } from 'react-router-dom';
-// --- MOCK DATA ---
-
 
 // --- SUB-COMPONENTS ---
 
 // A single pet card component
 const PetCard = ({ pet }) => (
   <Link to={`/pet/${pet.id}`}>
-  <div className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 ease-in-out">
+  <div className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 ease-in-out h-full flex flex-col">
     <img className="w-full h-48 object-cover" src={pet.image} alt={pet.name} />
-    <div className="p-4">
+    <div className="p-4 flex flex-col flex-grow">
       <h3 className="text-xl font-bold text-gray-800">{pet.name}</h3>
       <p className="text-sm text-gray-600 mb-2">{pet.breed}</p>
       <div className="flex justify-between text-sm text-gray-500 mb-4">
         <span>{pet.age} years old</span>
         <span>{pet.gender}</span>
       </div>
-      <p className="text-gray-700 text-sm mb-4 h-10">{pet.description}</p>
-      <button className="cursor-pointer w-full bg-amber-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-amber-600 transition-colors duration-300">
+      <p className="text-gray-700 text-sm mb-4 h-10 overflow-hidden text-ellipsis">{pet.description}</p>
+      <button className="cursor-pointer w-full bg-amber-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-amber-600 transition-colors duration-300 mt-auto">
         Adopt Me
       </button>
     </div>
@@ -29,14 +27,14 @@ const PetCard = ({ pet }) => (
 );
 
 // Filtering controls component
-const Filters = ({ filters, setFilters, onClear }) => {
+const Filters = ({ filters, setFilters, onClear, allPets }) => { // <-- Add allPets prop
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFilters(prev => ({ ...prev, [name]: value }));
   };
   
-  const petTypes = [...new Set(allPets.map(p => p.type))];
-  const breeds = [...new Set(allPets.filter(p => !filters.type || p.type === filters.type).map(p => p.breed))];
+  const petTypes = [...new Set(allPets.map(p => p.type))]; // Use allPets prop
+  const breeds = [...new Set(allPets.filter(p => !filters.type || p.type === filters.type).map(p => p.breed))]; // Use allPets prop
 
   return (
     <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-md mb-8">
@@ -84,26 +82,26 @@ const Header = () => (
   <header className="text-center my-8 md:my-12">
     <div className="flex justify-center items-center gap-3">
       {/* <PawPrint className="text-amber-500 h-10 w-10 sm:h-12 sm:w-12" /> */}
-      <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-800 tracking-tight">🐾Snuffle</h1>
+      <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-800 tracking-tight">Available Pets</h1>
     </div>
     <p className="text-lg text-gray-500 mt-2">Find your new best friend.</p>
   </header>
 );
 
-// Main App Component
-function App() {
+// Main Component
+function PetListings({ pets, onShowModal }) { // <-- Rename App to PetListings, accept props
   const initialFilters = { type: '', breed: '', age: '15', location: '' };
   const [filters, setFilters] = useState(initialFilters);
 
   const filteredPets = useMemo(() => {
-    return allPets.filter(pet => {
+    return pets.filter(pet => { // <-- Use 'pets' prop
       const typeMatch = !filters.type || pet.type === filters.type;
       const breedMatch = !filters.breed || pet.breed === filters.breed;
       const ageMatch = filters.age === '15' || pet.age <= parseInt(filters.age, 10);
       const locationMatch = !filters.location || pet.location.toLowerCase().includes(filters.location.toLowerCase());
       return typeMatch && breedMatch && ageMatch && locationMatch;
     });
-  }, [filters]);
+  }, [filters, pets]); // <-- Add 'pets' to dependency array
 
   const handleClearFilters = () => {
     setFilters(initialFilters);
@@ -119,7 +117,23 @@ function App() {
     <div className="bg-amber-50 min-h-screen font-sans">
       <div className="container mx-auto px-4 py-8">
         <Header />
-        <Filters filters={filters} setFilters={setFilters} onClear={handleClearFilters} />
+
+        <div className="mb-6 flex justify-end">
+            <button 
+                onClick={onShowModal}
+                className="inline-flex items-center gap-2 bg-green-600 cursor-pointer text-white font-bold py-3 px-6 rounded-lg hover:bg-green-500 transition-colors duration-300 shadow-md"
+            >
+                <Plus size={20} />
+                Add New Pet
+            </button>
+        </div>
+
+        <Filters 
+            filters={filters} 
+            setFilters={setFilters} 
+            onClear={handleClearFilters}
+            allPets={pets} // <-- Pass 'pets' prop to Filters
+        />
         
         {filteredPets.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -142,4 +156,4 @@ function App() {
   );
 }
 
-export default App;
+export default PetListings; // <-- Export PetListings

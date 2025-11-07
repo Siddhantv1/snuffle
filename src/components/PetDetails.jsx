@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowLeft, Cake, Users, Ruler, MapPin, Heart } from 'lucide-react';
-import allPets from '../data/petsdata.js';
+// import allPets from '../data/petsdata.js'; // <--
 import { useNavigate, useParams } from 'react-router-dom';
 
 
@@ -17,16 +17,16 @@ const InfoItem = ({ icon, label, value }) => (
   </div>
 );
 
-export default function PetDetails() {
+export default function PetDetails({ pets }) { // <-- Accept 'pets' prop
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const pet = allPets.find(p=>p.id.toString()==id);
+  const pet = pets.find(p=>p.id.toString()==id); // <-- Use 'pets' prop
   if (!pet){
     return (
         <div className='text-center p-10'>
             <h2 className='text-2xl text-gray-700'>Pet Not Found</h2>
-            <button onClick={() => navigate('/')} className='cursor-pointer mt-4 bg-amber-500 text-white px-4 py-2 rounded-lg'>Back to listings</button>
+            <button onClick={() => navigate('/petlistings')} className='cursor-pointer mt-4 bg-amber-500 text-white px-4 py-2 rounded-lg'>Back to listings</button>
         </div>
     );
   }
@@ -46,7 +46,7 @@ export default function PetDetails() {
           <div className="grid grid-cols-1 md:grid-cols-2">
             <div className="p-4">
               <img
-                src={pet.image}
+                src={pet.image || 'https://www.placehold.co/600x600.png?text=No+Image'} // Fallback image
                 alt={pet.name}
                 className="w-full h-full min-h-[300px] md:h-full object-cover rounded-xl shadow-lg"
               />
