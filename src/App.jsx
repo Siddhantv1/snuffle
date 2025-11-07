@@ -17,6 +17,7 @@ import PetListings from './components/PetListings';
 import PetDetails from './components/PetDetails';
 import AddPetModal from './components/AddPetModal'; // Import the modal
 import initialPets from './data/petsdata'; // Import the initial pet data
+import ProtectedRoute from './components/ProtectedRoute';
 
 function Home({ pets }) { // Receive pets as a prop
   return (
@@ -149,7 +150,6 @@ function App() {
   };
 
   return (
-    // 3. <Router> tags are removed from here
     <>
       <div className="bg-amber-50 min-h-screen font-sans">
         {/* --- HEADER / NAVBAR --- */}
@@ -175,15 +175,11 @@ function App() {
                 <Link to="/contact" className="text-gray-700 hover:text-amber-600 transition-colors">Contact us</Link>
               </div>
 
-              {/* 4. Clerk Sign In / User Button */}
+              {/* Clerk Sign In / User Button */}
               <div className={`transition-all duration-300 ${isFloating ? 'scale-90' : 'scale-100'}`}>
                 <SignedOut>
-                  <SignInButton 
-                    mode="modal"
-                    afterSignInUrl="/petlistings"
-                    afterSignUpUrl="/petlistings"
-                  >
-                    <button className={`text-white bg-amber-500 hover:bg-amber-600 font-medium rounded-full text-sm cursor-pointer transition-all duration-300 ${
+                  <SignInButton mode="modal">
+                    <button className={`text-white bg-amber-500 hover:bg-amber-600 cursor-pointer font-medium rounded-full text-sm transition-all duration-300 ${
                   isFloating ? 'px-5 py-2' : 'px-6 py-3'
                 }`}>
                       Sign In
@@ -205,32 +201,33 @@ function App() {
             {/* Public Route */}
             <Route path="/" element={<Home pets={pets} />} /> 
             
-            {/* 5. Protected Routes */}
+            {/* --- 2. USE NEW PROTECTED ROUTE --- */}
+            {/* Replace <SignedIn> with <ProtectedRoute> */}
             <Route 
               path="/petlistings" 
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <PetListings pets={pets} onShowModal={() => setShowModal(true)} />
-                </SignedIn>
+                </ProtectedRoute>
               } 
             />
             <Route 
               path="/pet/:id" 
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <PetDetails pets={pets} />
-                </SignedIn>
+                </ProtectedRoute>
               } 
             />
              
-            {/* 6. Clerk Auth Routes */}
+            {/* Clerk Auth Routes (these are fine as they are) */}
             <Route 
               path="/signin" 
-              element={<SignIn routing="path" path="/signin" afterSignInUrl="/petlistings" />} 
+              element={<SignIn routing="path" path="/signin" />} 
             />
             <Route 
               path="/signup" 
-              element={<SignUp routing="path" path="/signup" afterSignUpUrl="/petlistings" />} 
+              element={<SignUp routing="path" path="/signup" />} 
             />
           </Routes>
         </div>
@@ -260,9 +257,7 @@ function App() {
         onAddPet={handleAddPet} 
       />
     </>
-    // 3. <Router> tags are removed from here
   );
 }
-
 
 export default App;
