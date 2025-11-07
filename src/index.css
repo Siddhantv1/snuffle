@@ -1,2 +1,65 @@
 @import "tailwindcss";
 @custom-variant hover (&:hover);
+
+::-webkit-scrollbar {
+  width: 10px;  /* Width of the vertical scrollbar */
+  height: 10px; /* Height of the horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* track (background) */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #f59e0b; /* scrollbar (amber-500) */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d97706; /* scrollbar on hover (amber-600) */
+}
+
+/* .menu-dropdown-panel {
+  @apply 
+    bg-white 
+    rounded-xl 
+    shadow-lg 
+    ring-1 
+    ring-black 
+    py-2 
+    min-w-[200px] 
+    focus:outline-none;
+}
+
+Use this on each item (like a <Link> or <button>)
+  inside the dropdown panel.
+
+.menu-dropdown-item {
+  @apply 
+    block 
+    w-full 
+    text-left 
+    px-4 
+    py-2.5 
+    text-sm 
+    text-gray-700 
+    transition-colors 
+    duration-150;
+}
+
+.menu-dropdown-item:hover,
+.menu-dropdown-item:focus {
+  @apply 
+    bg-amber-100 
+    text-amber-600 
+    outline-none;
+}
+
+An optional class for a divider
+.menu-dropdown-divider {
+  @apply 
+    border-t 
+    border-gray-100 
+    my-1;
+} */
