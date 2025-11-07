@@ -4,13 +4,13 @@ import { X, UploadCloud } from 'lucide-react';
 export default function AddPetModal({ show, onClose, onAddPet }) {
   const [formData, setFormData] = useState({
     name: '',
-    type: 'Select',
+    type: '', 
     breed: '',
     age: '',
-    gender: 'Male',
-    size: 'Medium',
+    gender: '', 
+    size: '', 
     location: '',
-    image: null, // Store file object instead of URL
+    image: null,
     description: '',
   });
 
@@ -24,28 +24,31 @@ export default function AddPetModal({ show, onClose, onAddPet }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData(prev => ({ ...prev, image: file }));
-      setPreview(URL.createObjectURL(file)); // Show preview
+      const previewUrl = URL.createObjectURL(file);
+      setPreview(previewUrl);
+      setFormData(prev => ({ ...prev, image: previewUrl })); // Store the blob URL
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Simple validation
-    if (!formData.name || !formData.breed || !formData.age) {
-      alert('Please fill out at least Name, Breed, and Age.');
+    
+    // CHANGED: Updated validation
+    if (!formData.name || !formData.breed || !formData.age || !formData.type || !formData.gender) {
+      alert('Please fill out all required fields: Name, Type, Breed, Age, and Gender.');
       return;
     }
 
     onAddPet({
       ...formData,
       age: parseInt(formData.age, 10),
+      size: formData.size || '', // Pass empty string if not set
     });
 
     // Reset form and close
     setFormData({
-      name: '', type: 'Dog', breed: '', age: '', gender: 'Male',
-      size: 'Medium', location: '', image: null, description: '',
+      name: '', type: '', breed: '', age: '', gender: '',
+      size: '', location: '', image: null, description: '',
     });
     setPreview(null);
     onClose();
@@ -71,11 +74,11 @@ export default function AddPetModal({ show, onClose, onAddPet }) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input name="name" label="Name" value={formData.name} onChange={handleChange} placeholder="Name of your pet" />
-            <Select name="type" label="Type" value={formData.type} onChange={handleChange} options={['Dog', 'Cat', 'Bird', 'Rabbit']} />
+            <Input name="name" label="Name" value={formData.name} onChange={handleChange} placeholder="Name of your pet" required />
+            <Select name="type" label="Type" value={formData.type} onChange={handleChange} options={['Dog', 'Cat', 'Bird', 'Rabbit']} required />
           </div>
 
-          <Input name="breed" label="Breed" value={formData.breed} onChange={handleChange} placeholder="Breed of your pet" />
+          <Input name="breed" label="Breed" value={formData.breed} onChange={handleChange} placeholder="Breed of your pet" required />
 
           {/* File Upload */}
           <div>
@@ -105,7 +108,7 @@ export default function AddPetModal({ show, onClose, onAddPet }) {
                         </div>
                     </>
                     ) : (
-                    // --- EMPTY STATE ---
+                        
                     // When no image is selected
                     <div className="text-center text-gray-500">
                         <UploadCloud className="mx-auto h-10 w-10" />
@@ -131,12 +134,12 @@ export default function AddPetModal({ show, onClose, onAddPet }) {
             </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Input name="age" label="Age" type="number" value={formData.age} onChange={handleChange} placeholder="2" />
-            <Select name="gender" label="Gender" value={formData.gender} onChange={handleChange} options={['Male', 'Female']} />
-            <Select name="size" label="Size" value={formData.size} onChange={handleChange} options={['Small', 'Medium', 'Large']} />
+            <Input name="age" label="Age" type="number" min="0" value={formData.age} onChange={handleChange} placeholder="Enter Age" required />
+            <Select name="gender" label="Gender" value={formData.gender} onChange={handleChange} options={['Male', 'Female']} required />
+            <Select name="size" label="Size (Optional)" value={formData.size} onChange={handleChange} options={['Small', 'Medium', 'Large']} />
           </div>
 
-          <Input name="location" label="Location" value={formData.location} onChange={handleChange} placeholder="Sunnyvale, CA" />
+          <Input name="location" label="Location" value={formData.location} onChange={handleChange} placeholder="Enter Location" />
 
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Description</label>
@@ -184,6 +187,7 @@ const Input = ({ label, ...props }) => (
   </div>
 );
 
+// Updated Select component
 const Select = ({ label, name, options, ...props }) => (
   <div>
     <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
@@ -191,8 +195,13 @@ const Select = ({ label, name, options, ...props }) => (
       id={name}
       name={name}
       {...props}
-      className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+      // This will make the text gray when the placeholder is selected
+      className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
     >
+      {/* new placeholder option */}
+      <option value="" disabled>
+        - Select -
+      </option>
       {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
     </select>
   </div>
