@@ -5,9 +5,10 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 import PetListings from './components/PetListings';
 import PetDetails from './components/PetDetails';
-import allPets from './data/petsdata';
+import AddPetModal from './components/AddPetModal'; // Import the modal
+import initialPets from './data/petsdata'; // Import the initial pet data
 
-function Home() {
+function Home({ pets }) { // Receive pets as a prop
   return (
     <main>
         {/* --- Hero Section --- */}
@@ -22,13 +23,13 @@ function Home() {
               <p className="text-xl text-gray-600 mb-10 max-w-lg mx-auto md:mx-0">
                 Discover loving pets from shelters near you. Join us in making adoption the first choice and find a companion who's waiting for a forever home.
               </p>
-              <a 
-                href="#" 
+              <Link // Changed from <a> to <Link>
+                to="/petlistings" 
                 className="inline-flex items-center gap-2 bg-amber-500 text-white font-bold py-4 px-8 rounded-full text-lg hover:bg-amber-600 transition-colors duration-300 shadow-lg"
               >
                 <Search className="h-5 w-5" />
                 Browse Pets
-              </a>
+              </Link>
             </div>
             
             {/* Hero Image */}
@@ -81,10 +82,10 @@ function Home() {
           <div className="container mx-auto px-6 text-center">
             <h2 className="text-4xl font-bold text-gray-800 mb-12">Meet Some Friends</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-              {allPets.slice(0, 4).map((pet) => (
-                <div 
+              {pets.slice(0, 4).map((pet) => ( // Use 'pets' prop
+                <Link to={`/pet/${pet.id}`} // Wrap in Link
                   key={pet.id}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300"
+                  className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 block" // Added 'block'
                 >
                   <img 
                     src={pet.image} 
@@ -97,30 +98,45 @@ function Home() {
                       {pet.age}-year-old {pet.breed}
                     </p>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
             {/* See All Button */}
-            <a
-              href="/petlistings"
+            <Link // Changed from <a> to <Link>
+              to="/petlistings"
               className="inline-flex items-center gap-2 mt-12 bg-white text-amber-600 font-bold py-3 px-6 rounded-full text-lg border-2 border-amber-500 shadow-sm hover:bg-amber-500 hover:text-white transition-colors duration-300"
             >
               See All Pets
               <ArrowRight className="h-5 w-5" />
-            </a>
+            </Link>
           </div>
         </section>
       </main>
   );
 }
+
 function App() {
   const [isFloating, setIsFloating] = useState(false);
+  const [pets, setPets] = useState(initialPets); // <-- Manage pets in state
+  const [showModal, setShowModal] = useState(false); // <-- Manage modal visibility
 
   useEffect(() => {
     const handleScroll = () => setIsFloating(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Function to add a new pet
+  const handleAddPet = (newPet) => {
+    setPets(prevPets => [
+      ...prevPets,
+      { 
+        ...newPet, 
+        id: prevPets.length > 0 ? Math.max(...prevPets.map(p => p.id)) + 1 : 1 // Safer ID generation
+      }
+    ]);
+    setShowModal(false); // Close modal on success
+  };
 
   return (
     <Router>
@@ -164,9 +180,12 @@ function App() {
         {/* --- MAIN ROUTING AREA --- */}
         <div className="pt-32">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/petlistings" element={<PetListings />} />
-             <Route path="/pet/:id" element={<PetDetails />} />
+            <Route path="/" element={<Home pets={pets} />} /> 
+            <Route 
+              path="/petlistings" 
+              element={<PetListings pets={pets} onShowModal={() => setShowModal(true)} />} // Pass props
+            />
+             <Route path="/pet/:id" element={<PetDetails pets={pets} />} /> 
           </Routes>
         </div>
 
@@ -187,6 +206,13 @@ function App() {
           </div>
         </footer>
       </div>
+
+      {/* --- ADD PET MODAL --- */}
+      <AddPetModal 
+        show={showModal} 
+        onClose={() => setShowModal(false)} 
+        onAddPet={handleAddPet} 
+      />
     </Router>
   );
 }
