@@ -31,6 +31,9 @@ export default function PetDetails({ pets }) { // <-- Accept 'pets' prop
     );
   }
 
+  //handle Pet Image separately
+  const petImage = pet.image instanceof File ? URL.createObjectURL(pet.image) : pet.image;
+
   return (
 <div className="bg-amber-50 min-h-screen">
       <div className="container mx-auto px-4 py-8">
@@ -46,7 +49,7 @@ export default function PetDetails({ pets }) { // <-- Accept 'pets' prop
           <div className="grid grid-cols-1 md:grid-cols-2">
             <div className="p-4">
               <img
-                src={pet.image || 'https://www.placehold.co/600x600.png?text=No+Image'} // Fallback image
+                src={petImage || 'https://www.placehold.co/600x600.png?text=No+Image'} // Fallback image
                 alt={pet.name}
                 className="w-full h-full min-h-[300px] md:h-full object-cover rounded-xl shadow-lg"
               />

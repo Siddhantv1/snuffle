@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 const PetCard = ({ pet }) => (
   <Link to={`/pet/${pet.id}`}>
   <div className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 ease-in-out h-full flex flex-col">
-    <img className="w-full h-48 object-cover" src={pet.image} alt={pet.name} />
+    <img className="w-full h-48 object-cover" src={pet.image || 'https://www.placehold.co/600x600.png?text=No+Image'} alt={pet.name} />
     <div className="p-4 flex flex-col flex-grow">
       <h3 className="text-xl font-bold text-gray-800">{pet.name}</h3>
       <p className="text-sm text-gray-600 mb-2">{pet.breed}</p>
