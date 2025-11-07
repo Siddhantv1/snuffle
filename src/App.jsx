@@ -1,7 +1,17 @@
 import { useEffect, useState } from 'react';
 import './index.css';
 import { PawPrint, Heart, ClipboardList, Users, Search, ArrowRight } from 'lucide-react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
+
+// 2. Import Clerk components
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+  SignIn,
+  SignUp
+} from "@clerk/clerk-react";
 
 import PetListings from './components/PetListings';
 import PetDetails from './components/PetDetails';
@@ -139,7 +149,8 @@ function App() {
   };
 
   return (
-    <Router>
+    // 3. <Router> tags are removed from here
+    <>
       <div className="bg-amber-50 min-h-screen font-sans">
         {/* --- HEADER / NAVBAR --- */}
         <header
@@ -164,15 +175,26 @@ function App() {
                 <Link to="/contact" className="text-gray-700 hover:text-amber-600 transition-colors">Contact us</Link>
               </div>
 
-              {/* Sign In */}
-              <Link
-                to="/signin"
-                className={`text-white bg-amber-500 hover:bg-amber-600 font-medium rounded-full text-sm transition-all duration-300 ${
+              {/* 4. Clerk Sign In / User Button */}
+              <div className={`transition-all duration-300 ${isFloating ? 'scale-90' : 'scale-100'}`}>
+                <SignedOut>
+                  <SignInButton 
+                    mode="modal"
+                    afterSignInUrl="/petlistings"
+                    afterSignUpUrl="/petlistings"
+                  >
+                    <button className={`text-white bg-amber-500 hover:bg-amber-600 font-medium rounded-full text-sm cursor-pointer transition-all duration-300 ${
                   isFloating ? 'px-5 py-2' : 'px-6 py-3'
-                }`}
-              >
-                Sign In
-              </Link>
+                }`}>
+                      Sign In
+                    </button>
+                  </SignInButton>
+                </SignedOut>
+                <SignedIn>
+                  <UserButton afterSignOutUrl="/" />
+                </SignedIn>
+              </div>
+              
             </div>
           </nav>
         </header>
@@ -180,12 +202,36 @@ function App() {
         {/* --- MAIN ROUTING AREA --- */}
         <div className="pt-32">
           <Routes>
+            {/* Public Route */}
             <Route path="/" element={<Home pets={pets} />} /> 
+            
+            {/* 5. Protected Routes */}
             <Route 
               path="/petlistings" 
-              element={<PetListings pets={pets} onShowModal={() => setShowModal(true)} />} // Pass props
+              element={
+                <SignedIn>
+                  <PetListings pets={pets} onShowModal={() => setShowModal(true)} />
+                </SignedIn>
+              } 
             />
-             <Route path="/pet/:id" element={<PetDetails pets={pets} />} /> 
+            <Route 
+              path="/pet/:id" 
+              element={
+                <SignedIn>
+                  <PetDetails pets={pets} />
+                </SignedIn>
+              } 
+            />
+             
+            {/* 6. Clerk Auth Routes */}
+            <Route 
+              path="/signin" 
+              element={<SignIn routing="path" path="/signin" afterSignInUrl="/petlistings" />} 
+            />
+            <Route 
+              path="/signup" 
+              element={<SignUp routing="path" path="/signup" afterSignUpUrl="/petlistings" />} 
+            />
           </Routes>
         </div>
 
@@ -213,7 +259,8 @@ function App() {
         onClose={() => setShowModal(false)} 
         onAddPet={handleAddPet} 
       />
-    </Router>
+    </>
+    // 3. <Router> tags are removed from here
   );
 }
 
