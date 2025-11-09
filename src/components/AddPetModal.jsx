@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { X, UploadCloud } from 'lucide-react';
 import { useAuth } from '@clerk/clerk-react'; // <-- 1. Import useAuth
+import { useNotification } from '../hooks/useNotification';
 
 export default function AddPetModal({ show, onClose, onAddPet }) {
   const { getToken } = useAuth(); // <-- 2. Get the getToken function
+  const { showNotification } = useNotification();
+
   const [formData, setFormData] = useState({
     name: '',
     type: '', 
@@ -38,12 +41,12 @@ export default function AddPetModal({ show, onClose, onAddPet }) {
     e.preventDefault();
     
     if (!formData.name || !formData.breed || !formData.age || !formData.type || !formData.gender) {
-      alert('Please fill out all required fields: Name, Type, Breed, Age, and Gender.');
+      showNotification('Please fill out all required fields: Name, Type, Breed, Age, and Gender.', 'error');
       return;
     }
     //2. set image uploading necessary.
     if (!formData.image) {
-      alert('Please upload a picture of the pet.');
+      showNotification('Please upload a picture of the pet.', 'error');
       return;
     }
 
@@ -81,6 +84,7 @@ export default function AddPetModal({ show, onClose, onAddPet }) {
       const savedPet = await res.json(); // 6. Get the saved pet from the API response
       
       onAddPet(savedPet); // 7. Pass the *new pet from the DB* to App.jsx
+      showNotification('Pet listed successfully!', 'success');
 
       // 8. Reset form and close
       setFormData({
@@ -92,7 +96,7 @@ export default function AddPetModal({ show, onClose, onAddPet }) {
 
     } catch (error) {
       console.error(error);
-      alert('An error occurred. Please try again.');
+      showNotification('An error occurred. Please try again.', 'error');
     } finally {
       setIsSubmitting(false); // Unset loading state
     }

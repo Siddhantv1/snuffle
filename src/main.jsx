@@ -4,7 +4,7 @@ import './index.css'
 import App from './App.jsx'
 import { ClerkProvider } from '@clerk/clerk-react'
 import { BrowserRouter } from 'react-router-dom'
-
+import { NotificationProvider } from './components/NotificationProvider'
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 const FIRST_TIME_URL = import.meta.env.VITE_CLERK_AFTER_SIGN_UP_URL
@@ -43,7 +43,9 @@ createRoot(document.getElementById('root')).render(
       appearance={clerkAppearance}
       signUpForceRedirectUrl={FIRST_TIME_URL}
       >
+      <NotificationProvider>
         <App />
+        </NotificationProvider>
       </ClerkProvider>
     </BrowserRouter>
   </StrictMode>,

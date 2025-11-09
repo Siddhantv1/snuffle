@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { useUser, useAuth } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
 import { LoaderCircle, MapPin, User, Home, UploadCloud, FileText } from 'lucide-react';
+import { useNotification } from '../hooks/useNotification'
 
 export default function Onboarding() {
   const { user } = useUser();
   const { getToken } = useAuth(); // Import getToken
   const navigate = useNavigate();
+  const { showNotification } = useNotification();
   
   // State for all fields
   const [role, setRole] = useState(''); // 'customer' or 'rehomer'
@@ -28,7 +30,7 @@ export default function Onboarding() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!role || !location) {
-      alert('Please select a role and enter your location.');
+      showNotification('Please select a role and enter your location.', 'error');
       return;
     }
     
@@ -39,7 +41,7 @@ export default function Onboarding() {
 
     if (role === 'rehomer') {
       if (!address || !certificate) {
-        alert('As a rehomer, you must provide a full address and a certificate.');
+        showNotification('As a rehomer, you must provide your full address and a certificate.', 'error');
         return;
       }
       data.append('address', address);
@@ -70,9 +72,10 @@ export default function Onboarding() {
       await user.reload(); 
       
       navigate('/petlistings');
+      showNotification('Welcome to Snuffle!', 'success');
     } catch (err) {
       console.error('Error submitting onboarding', err);
-      alert('Failed to save your information. Please try again.');
+      showNotification('Failed to save your information. Please try again.', 'error');
       setIsSubmitting(false);
     }
   };
