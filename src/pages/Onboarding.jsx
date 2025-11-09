@@ -1,14 +1,29 @@
 import React, { useState } from 'react';
-import { useUser } from '@clerk/clerk-react';
+import { useUser, useAuth } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
-import { LoaderCircle, MapPin, User, Home } from 'lucide-react';
+import { LoaderCircle, MapPin, User, Home, UploadCloud, FileText } from 'lucide-react';
 
 export default function Onboarding() {
   const { user } = useUser();
+  const { getToken } = useAuth(); // Import getToken
   const navigate = useNavigate();
+  
+  // State for all fields
   const [role, setRole] = useState(''); // 'customer' or 'rehomer'
   const [location, setLocation] = useState('');
+  const [address, setAddress] = useState(''); // New state
+  const [certificate, setCertificate] = useState(null); // New state for the file
+  const [certPreview, setCertPreview] = useState(''); // New state for preview
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleCertificateChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setCertificate(file);
+      setCertPreview(file.name); // Show the file name
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,20 +31,47 @@ export default function Onboarding() {
       alert('Please select a role and enter your location.');
       return;
     }
+    
+    // Create a new FormData object to send file + text
+    const data = new FormData();
+    data.append('role', role);
+    data.append('location', location);
+
+    if (role === 'rehomer') {
+      if (!address || !certificate) {
+        alert('As a rehomer, you must provide a full address and a certificate.');
+        return;
+      }
+      data.append('address', address);
+      data.append('certificate', certificate); // Append the file
+    }
 
     setIsSubmitting(true);
     try {
-      // Save the data to Clerk's public metadata
-      await user.update({
-        unsafeMetadata: { //because unsafeMetadata has both frontend and backend R/W access
-          role: role,
-          location: location,
+      const token = await getToken();
+      
+      // POST to our new backend endpoint
+      const res = await fetch('http://localhost:5001/api/onboarding', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+          // No Content-Type, FormData sets it automatically
         },
+        body: data,
       });
-      // After saving, send them to the main pet listings page
+
+      if (!res.ok) {
+        throw new Error('Server failed to save data.');
+      }
+
+      await res.json();
+      
+      // Manually update the user session to get new metadata
+      await user.reload(); 
+      
       navigate('/petlistings');
     } catch (err) {
-      console.error('Error updating user metadata', err);
+      console.error('Error submitting onboarding', err);
       alert('Failed to save your information. Please try again.');
       setIsSubmitting(false);
     }
@@ -70,7 +112,7 @@ export default function Onboarding() {
           {/* Location Input */}
           <div>
             <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
-              Where are you located?
+              Where are you located? (City, State)
             </label>
             <div className="relative">
               <input
@@ -89,6 +131,66 @@ export default function Onboarding() {
               />
             </div>
           </div>
+
+          {/* --- NEW CONDITIONAL FIELDS --- */}
+          {role === 'rehomer' && (
+            <div className="space-y-6 p-4 border border-amber-200 bg-amber-50 rounded-lg">
+              {/* Full Address */}
+              <div>
+                <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+                  Full Shelter/Store Address
+                </label>
+                <textarea
+                  id="address"
+                  name="address"
+                  rows="3"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  placeholder="Enter the address of your Shelter/Pet Store"
+                ></textarea>
+              </div>
+              
+              {/* Certificate Upload */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Registration Certificate
+                </label>
+                <label
+                  htmlFor="certificate"
+                  className="relative flex flex-col items-center justify-center w-full h-32 bg-white border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-amber-500 hover:bg-amber-100 transition-colors"
+                >
+                  {certPreview ? (
+                    <div className="text-center text-green-600">
+                      <FileText className="mx-auto h-10 w-10" />
+                      <span className="mt-2 block text-sm font-medium">
+                        {certPreview}
+                      </span>
+                      <span className="text-xs">Click to change file</span>
+                    </div>
+                  ) : (
+                    <div className="text-center text-gray-500">
+                      <UploadCloud className="mx-auto h-10 w-10" />
+                      <span className="mt-2 block text-sm font-medium">
+                        Click to upload
+                      </span>
+                      <span className="text-xs">PDF, PNG, or JPG</span>
+                    </div>
+                  )}
+                </label>
+                <input
+                  id="certificate"
+                  name="certificate"
+                  type="file"
+                  accept="image/*,.pdf"
+                  onChange={handleCertificateChange}
+                  className="sr-only"
+                />
+                <p className='block text-amber-600 font-semibold text-sm'>We will verify the legitimacy of your certificate with the Animal Welfare Board.</p>
+              </div>
+            </div>
+          )}
 
           {/* Submit Button */}
           <div>

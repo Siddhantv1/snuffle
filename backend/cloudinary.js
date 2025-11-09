@@ -18,4 +18,14 @@ const storage = new CloudinaryStorage({
   },
 });
 
-export const upload = multer({ storage: storage });
+export const uploadPetImage = multer({ storage: storage });
+
+// Added storage for certificates.
+const certificateStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'snuffle-certificates', // Store in a separate folder
+    allowed_formats: ['jpg', 'png', 'jpeg', 'pdf'], // Allow PDFs
+  },
+});
+export const uploadCertificate = multer({ storage: certificateStorage });
