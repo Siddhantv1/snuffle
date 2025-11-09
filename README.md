@@ -27,12 +27,12 @@ This README explains how to run the project locally, what environment variables 
 
 ## Local setup
 1. Clone the repository
-```
+```git
 	git clone https://github.com/siddhantv1/snuffle.git
 	cd Snuffle
 ```
 2. Install dependencies
-```
+```javascript
 	npm install
 	cd backend
 	npm install
