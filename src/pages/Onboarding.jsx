@@ -123,7 +123,7 @@ export default function Onboarding() {
                 onChange={(e) => setLocation(e.target.value)}
                 required
                 className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
-                placeholder="e.g., Sunnyvale, CA"
+                placeholder="e.g., Mumbai, Maharashtra"
               />
               <MapPin
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
