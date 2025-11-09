@@ -10,20 +10,22 @@ import {
   SignInButton,
   UserButton,
   SignIn,
-  SignUp
+  SignUp,
+  useAuth // <-- 1. Import useAuth to check login status
 } from "@clerk/clerk-react";
 
 import PetListings from './components/PetListings';
 import PetDetails from './components/PetDetails';
 import AddPetModal from './components/AddPetModal'; // Import the modal
-import initialPets from './data/petsdata'; // Import the initial pet data
+// import initialPets from './data/petsdata'; // <-- 2. We no longer need this
 import ProtectedRoute from './components/ProtectedRoute';
 
-function Home({ pets }) { // Receive pets as a prop
+// ... (Home function remains the same, but we'll update its pet keys)
+function Home({ pets }) {
   return (
     <main>
-        {/* --- Hero Section --- */}
-        <section className="min-h-screen flex items-center pt-24 pb-12">
+      {/* --- Hero Section --- */}
+      <section className="min-h-screen flex items-center pt-24 pb-12">
           <div className="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
             {/* Hero Text */}
             <div className="text-center md:text-left">
@@ -94,9 +96,9 @@ function Home({ pets }) { // Receive pets as a prop
             <h2 className="text-4xl font-bold text-gray-800 mb-12">Meet Some Friends</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
               {pets.slice(0, 4).map((pet) => ( // Use 'pets' prop
-                <Link to={`/pet/${pet.id}`} // Wrap in Link
-                  key={pet.id}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 block" // Added 'block'
+                <Link to={`/pet/${pet._id}`} // <-- 3. Use _id
+                  key={pet._id} // <-- 3. Use _id
+                  className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 block"
                 >
                   <img 
                     src={pet.image} 
@@ -126,10 +128,31 @@ function Home({ pets }) { // Receive pets as a prop
   );
 }
 
+
 function App() {
   const [isFloating, setIsFloating] = useState(false);
-  const [pets, setPets] = useState(initialPets); // <-- Manage pets in state
-  const [showModal, setShowModal] = useState(false); // <-- Manage modal visibility
+  const [pets, setPets] = useState([]); // <-- 4. Start with an empty array
+  const [showModal, setShowModal] = useState(false);
+  const { isSignedIn } = useAuth(); // Get auth status
+
+  // 5. ADD THIS useEffect TO FETCH PETS
+  useEffect(() => {
+    // This function will run once when the app loads,
+    // regardless of login status.
+    const fetchPets = async () => {
+      try {
+        const res = await fetch('http://localhost:5001/api/pets');
+        const data = await res.json();
+        setPets(data);
+      } catch (error) {
+        console.error('Failed to fetch pets:', error);
+      }
+    };
+    
+    fetchPets();
+    
+  }, []); // <-- An empty dependency array means this runs only ONCE.
+
 
   useEffect(() => {
     const handleScroll = () => setIsFloating(window.scrollY > 50);
@@ -137,14 +160,12 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Function to add a new pet
-  const handleAddPet = (newPet) => {
+  // 6. UPDATE handleAddPet
+  // This function now adds the pet *from the database* to the top of the list
+  const handleAddPet = (newPetFromDB) => {
     setPets(prevPets => [
-      ...prevPets,
-      { 
-        ...newPet, 
-        id: prevPets.length > 0 ? Math.max(...prevPets.map(p => p.id)) + 1 : 1 // Safer ID generation
-      }
+      newPetFromDB, // Add the new pet to the beginning of the array
+      ...prevPets
     ]);
     setShowModal(false); // Close modal on success
   };
@@ -201,8 +222,7 @@ function App() {
             {/* Public Route */}
             <Route path="/" element={<Home pets={pets} />} /> 
             
-            {/* --- 2. USE NEW PROTECTED ROUTE --- */}
-            {/* Replace <SignedIn> with <ProtectedRoute> */}
+            {/* Protected Routes */}
             <Route 
               path="/petlistings" 
               element={
@@ -220,7 +240,7 @@ function App() {
               } 
             />
              
-            {/* Clerk Auth Routes (these are fine as they are) */}
+            {/* Clerk Auth Routes */}
             <Route 
               path="/signin" 
               element={<SignIn routing="path" path="/signin" />} 
@@ -233,6 +253,7 @@ function App() {
         </div>
 
         {/* --- FOOTER --- */}
+        {/* ... (Footer remains the same) ... */}
         <footer className="bg-gray-800 text-gray-300 py-12 mt-24">
           <div className="container mx-auto px-6 text-center">
             <Link to="/" className="flex justify-center items-center gap-2 text-2xl font-bold text-white mb-4">

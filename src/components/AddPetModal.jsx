@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { X, UploadCloud } from 'lucide-react';
+import { useAuth } from '@clerk/clerk-react'; // <-- 1. Import useAuth
 
 export default function AddPetModal({ show, onClose, onAddPet }) {
+  const { getToken } = useAuth(); // <-- 2. Get the getToken function
   const [formData, setFormData] = useState({
     name: '',
     type: '', 
@@ -15,6 +17,7 @@ export default function AddPetModal({ show, onClose, onAddPet }) {
   });
 
   const [preview, setPreview] = useState(null); // For image preview
+  const [isSubmitting, setIsSubmitting] = useState(false); // For loading state
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,28 +33,56 @@ export default function AddPetModal({ show, onClose, onAddPet }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  // 3. Make handleSubmit async
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // CHANGED: Updated validation
     if (!formData.name || !formData.breed || !formData.age || !formData.type || !formData.gender) {
       alert('Please fill out all required fields: Name, Type, Breed, Age, and Gender.');
       return;
     }
 
-    onAddPet({
-      ...formData,
-      age: parseInt(formData.age, 10),
-      size: formData.size || '', // Pass empty string if not set
-    });
+    setIsSubmitting(true); // Set loading state
 
-    // Reset form and close
-    setFormData({
-      name: '', type: '', breed: '', age: '', gender: '',
-      size: '', location: '', image: null, description: '',
-    });
-    setPreview(null);
-    onClose();
+    try {
+      const token = await getToken(); // 4. Get the user's auth token
+
+      // 5. Send the data to your backend API
+      const res = await fetch('http://localhost:5001/api/pets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // Send the token
+        },
+        body: JSON.stringify({
+          ...formData,
+          age: parseInt(formData.age, 10),
+          size: formData.size || '', 
+        })
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to save pet');
+      }
+
+      const savedPet = await res.json(); // 6. Get the saved pet from the API response
+      
+      onAddPet(savedPet); // 7. Pass the *new pet from the DB* to App.jsx
+
+      // 8. Reset form and close
+      setFormData({
+        name: '', type: '', breed: '', age: '', gender: '',
+        size: '', location: '', image: null, description: '',
+      });
+      setPreview(null);
+      onClose();
+
+    } catch (error) {
+      console.error(error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false); // Unset loading state
+    }
   };
 
   if (!show) return null;
@@ -158,15 +189,17 @@ export default function AddPetModal({ show, onClose, onAddPet }) {
             <button
               type="button"
               onClick={onClose}
-              className="bg-gray-100 text-gray-700 cursor-pointer font-medium py-2 px-5 rounded-lg hover:bg-gray-200 transition-colors"
+              disabled={isSubmitting} // Disable when submitting
+              className="bg-gray-100 text-gray-700 cursor-pointer font-medium py-2 px-5 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="bg-amber-500 text-white cursor-pointer font-medium py-2 px-5 rounded-lg hover:bg-amber-600 transition-colors"
+              disabled={isSubmitting} // Disable when submitting
+              className="bg-amber-500 text-white cursor-pointer font-medium py-2 px-5 rounded-lg hover:bg-amber-600 transition-colors disabled:opacity-50"
             >
-              Set up for adoption
+              {isSubmitting ? 'Adding...' : 'Add Pet'}
             </button>
           </div>
         </form>
