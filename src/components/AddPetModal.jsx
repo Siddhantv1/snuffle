@@ -166,7 +166,7 @@ export default function AddPetModal({ show, onClose, onAddPet }) {
               type="submit"
               className="bg-amber-500 text-white cursor-pointer font-medium py-2 px-5 rounded-lg hover:bg-amber-600 transition-colors"
             >
-              Add Pet
+              Set up for adoption
             </button>
           </div>
         </form>
