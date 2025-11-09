@@ -19,6 +19,7 @@ import PetDetails from './components/PetDetails';
 import AddPetModal from './components/AddPetModal'; // Import the modal
 // import initialPets from './data/petsdata'; // <-- 2. We no longer need this
 import ProtectedRoute from './components/ProtectedRoute';
+import Onboarding from './pages/Onboarding'; // for first time users
 
 // ... (Home function remains the same, but we'll update its pet keys)
 function Home({ pets }) {
@@ -223,6 +224,17 @@ function App() {
             <Route path="/" element={<Home pets={pets} />} /> 
             
             {/* Protected Routes */}
+
+            {/* route for onboarding first time users */}
+            <Route
+              path="/onboarding"
+              element={
+                <ProtectedRoute>
+                  <Onboarding />
+                </ProtectedRoute>
+              }
+            />
+            {/* Pet Listings Route */}
             <Route 
               path="/petlistings" 
               element={
