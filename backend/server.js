@@ -6,6 +6,7 @@ import 'dotenv/config'; // New way to import dotenv
 
 import { clerkAuth } from './clerk.js'; // Use import, add .js
 import Pet from './models/Pet.js';     // Use import, add .js
+import { upload } from './cloudinary.js';
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -31,13 +32,18 @@ app.get('/api/pets', async (req, res) => {
   }
 });
 
-// POST: Add a new pet (PROTECTED)
-app.post('/api/pets', clerkAuth, async (req, res) => {
+// --- 2. UPDATE THE "ADD PET" ROUTE ---
+// We add 'clerkAuth' first, then 'upload.single('image')'
+// 'upload.single' tells multer to look for a file named "image"
+app.post('/api/pets', clerkAuth, upload.single('image'), async (req, res) => {
   try {
     const { userId } = req.auth;
     
+    // 3. The file URL is now at req.file.path
+    //    The text fields are at req.body
     const newPet = new Pet({
       ...req.body,
+      image: req.file.path, // <-- This is the new permanent URL from Cloudinary
       rehomerId: userId,
     });
 
@@ -45,6 +51,7 @@ app.post('/api/pets', clerkAuth, async (req, res) => {
     res.status(201).json(savedPet);
 
   } catch (err) {
+    console.error(err); // Log the full error
     res.status(400).json({ error: 'Failed to add pet', details: err.message });
   }
 });
