@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { PawPrint, Search, XCircle, Dog, Cat, Bird, Rabbit, Plus } from 'lucide-react';
 // import allPets from '../data/petsdata.js'; // <--
 import { Link } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react'; // import the useUser for user roles
 
 // --- SUB-COMPONENTS ---
 
@@ -91,8 +92,11 @@ const Header = () => (
 
 // Main Component
 function PetListings({ pets, onShowModal }) { // <-- Rename App to PetListings, accept props
+  const { user } = useUser();
   const initialFilters = { type: '', breed: '', age: '15', location: '' };
   const [filters, setFilters] = useState(initialFilters);
+
+  const isRehomer = user?.unsafeMetadata?.role === 'rehomer';
 
   const filteredPets = useMemo(() => {
     return pets.filter(pet => { // <-- Use 'pets' prop
@@ -119,6 +123,7 @@ function PetListings({ pets, onShowModal }) { // <-- Rename App to PetListings, 
       <div className="container mx-auto px-4 py-8">
         <Header />
 
+        {isRehomer && (
         <div className="mb-6 flex justify-end">
             <button 
                 onClick={onShowModal}
@@ -128,6 +133,7 @@ function PetListings({ pets, onShowModal }) { // <-- Rename App to PetListings, 
                 Add New Pet
             </button>
         </div>
+        )}
 
         <Filters 
             filters={filters} 
