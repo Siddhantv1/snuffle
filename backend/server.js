@@ -6,8 +6,9 @@ import 'dotenv/config'; // New way to import dotenv
 
 import { clerkAuth } from './clerk.js'; 
 import Pet from './models/Pet.js';     
-import { uploadPetImage, uploadCertificate } from './cloudinary.js';
+import { uploadPetImage, uploadCertificate, uploadIdProof } from './cloudinary.js';
 import { ClerkExpressRequireAuth, clerkClient } from '@clerk/clerk-sdk-node';
+import AdoptionApplication from './models/AdoptionApplication.js'
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -93,6 +94,53 @@ app.post('/api/onboarding', clerkAuth, uploadCertificate.single('certificate'), 
   } catch (err) {
     console.error('Onboarding error:', err);
     res.status(500).json({ error: 'Failed to save onboarding data.' });
+  }
+});
+
+// New POST for listening to Applications
+app.post('/api/applications', clerkAuth, uploadIdProof.single('idProof'), async (req, res) => {
+  try {
+    const { userId } = req.auth;
+    const { 
+      petId, rehomerId, fullName, age, householdSize, 
+      contactNumber, address, residenceType, hasOtherPets, 
+      hasKids, petSleepLocation, agreedToCare, agreedToBackgroundCheck 
+    } = req.body;
+
+    if (!req.file) {
+      return res.status(400).json({ error: 'ID Proof is required.' });
+    }
+
+    // Basic validation
+    if (!agreedToCare || !agreedToBackgroundCheck) {
+      return res.status(400).json({ error: 'You must agree to the terms.' });
+    }
+
+    const newApplication = new AdoptionApplication({
+      applicantId: userId,
+      pet: petId,
+      rehomerId: rehomerId,
+      fullName,
+      age: Number(age),
+      householdSize: Number(householdSize),
+      contactNumber,
+      address,
+      residenceType,
+      idProofUrl: req.file.path,
+      hasOtherPets: hasOtherPets === 'true',
+      hasKids: hasKids === 'true',
+      petSleepLocation,
+      agreedToCare: agreedToCare === 'true',
+      agreedToBackgroundCheck: agreedToBackgroundCheck === 'true',
+      status: 'Pending',
+    });
+
+    const savedApplication = await newApplication.save();
+    res.status(201).json(savedApplication);
+
+  } catch (err) {
+    console.error('Application submission error:', err);
+    res.status(500).json({ error: 'Failed to submit application', details: err.message });
   }
 });
 

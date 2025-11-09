@@ -29,3 +29,14 @@ const certificateStorage = new CloudinaryStorage({
   },
 });
 export const uploadCertificate = multer({ storage: certificateStorage });
+
+
+// For adopter ID proofs
+const idProofStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'snuffle-id-proofs',
+    allowed_formats: ['jpg', 'png', 'jpeg', 'pdf'],
+  },
+});
+export const uploadIdProof = multer({ storage: idProofStorage });
