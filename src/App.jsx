@@ -30,6 +30,11 @@ function Home({ pets }) {
           <div className="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
             {/* Hero Text */}
             <div className="text-center md:text-left">
+            <img 
+                src="../public/paws.png" 
+                alt="Logo"
+                className="w-75 h-auto"
+              />
               <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
                 Find Your New<br />
                 <span className="text-amber-500">Best Friend</span>
