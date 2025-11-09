@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+const FIRST_TIME_URL = import.meta.env.VITE_CLERK_AFTER_SIGN_UP_URL
 
 if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key")
@@ -40,6 +41,7 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <ClerkProvider publishableKey={PUBLISHABLE_KEY}
       appearance={clerkAppearance}
+      signUpForceRedirectUrl={FIRST_TIME_URL}
       >
         <App />
       </ClerkProvider>
