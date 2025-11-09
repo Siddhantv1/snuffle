@@ -24,12 +24,12 @@ export default function AddPetModal({ show, onClose, onAddPet }) {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  //1. change
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const previewUrl = URL.createObjectURL(file);
-      setPreview(previewUrl);
-      setFormData(prev => ({ ...prev, image: previewUrl })); // Store the blob URL
+      setPreview(URL.createObjectURL(file)); // Keep the preview
+      setFormData(prev => ({ ...prev, image: file })); // <-- Store the ACTUAL FILE
     }
   };
 
@@ -41,8 +41,24 @@ export default function AddPetModal({ show, onClose, onAddPet }) {
       alert('Please fill out all required fields: Name, Type, Breed, Age, and Gender.');
       return;
     }
+    //2. set image uploading necessary.
+    if (!formData.image) {
+      alert('Please upload a picture of the pet.');
+      return;
+    }
 
     setIsSubmitting(true); // Set loading state
+    // We must use FormData to send a file
+      const data = new FormData();
+      data.append('name', formData.name);
+      data.append('type', formData.type);
+      data.append('breed', formData.breed);
+      data.append('age', parseInt(formData.age, 10));
+      data.append('gender', formData.gender);
+      data.append('size', formData.size || '');
+      data.append('location', formData.location);
+      data.append('description', formData.description);
+      data.append('image', formData.image); // <-- Append the file object
 
     try {
       const token = await getToken(); // 4. Get the user's auth token
@@ -51,14 +67,11 @@ export default function AddPetModal({ show, onClose, onAddPet }) {
       const res = await fetch('http://localhost:5001/api/pets', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Send the token
+          'Authorization': `Bearer ${token}`
+          // -- DO NOT set Content-Type: 'application/json' --
+          // The browser automatically sets the correct 'multipart/form-data' header
         },
-        body: JSON.stringify({
-          ...formData,
-          age: parseInt(formData.age, 10),
-          size: formData.size || '', 
-        })
+        body: data // <-- Send the FormData object
       });
 
       if (!res.ok) {
