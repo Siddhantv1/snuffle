@@ -1,8 +1,8 @@
 import React from 'react';
 import { ArrowLeft, Cake, Users, Ruler, MapPin, Heart } from 'lucide-react';
 // import allPets from '../data/petsdata.js'; // <--
-import { useNavigate, useParams } from 'react-router-dom';
-
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react'; 
 
 // This is a small helper component just for this page
 const InfoItem = ({ icon, label, value }) => (
@@ -20,6 +20,7 @@ const InfoItem = ({ icon, label, value }) => (
 export default function PetDetails({ pets }) { // <-- Accept 'pets' prop
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useUser();
 
   const pet = pets.find(p => p._id.toString() == id); // use ._id for finding pets
   if (!pet){
@@ -31,6 +32,7 @@ export default function PetDetails({ pets }) { // <-- Accept 'pets' prop
     );
   }
 
+  const isCustomer = user?.unsafeMetadata?.role === 'customer';
   //handle Pet Image separately
   const petImage = pet.image instanceof File ? URL.createObjectURL(pet.image) : pet.image;
 
@@ -38,7 +40,7 @@ export default function PetDetails({ pets }) { // <-- Accept 'pets' prop
 <div className="bg-amber-50 min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate('/petlistings')}
           className="cursor-pointer inline-flex items-center gap-2 text-amber-600 font-bold mb-6 group"
         >
           <ArrowLeft size={20} className="cursor-pointer transition-transform group-hover:-translate-x-1" />
@@ -49,7 +51,7 @@ export default function PetDetails({ pets }) { // <-- Accept 'pets' prop
           <div className="grid grid-cols-1 md:grid-cols-2">
             <div className="p-4">
               <img
-                src={petImage || 'https://www.placehold.co/600x600.png?text=No+Image'} // Fallback image
+                src={petImage || 'https://www.placehold.co/600x600.png?text=No+Image+Uploaded'} // Fallback image
                 alt={pet.name}
                 className="w-full h-full min-h-[300px] md:h-full object-cover rounded-xl shadow-lg"
               />
@@ -71,10 +73,16 @@ export default function PetDetails({ pets }) { // <-- Accept 'pets' prop
                 {pet.description}
               </p>
 
-              <button className="cursor-pointer w-full flex justify-center items-center gap-3 bg-amber-500 text-white font-bold py-4 px-6 rounded-lg text-lg hover:bg-amber-600 transition-colors duration-300 shadow-lg">
-                <Heart size={22} />
-                Start Adoption Process
-              </button>
+              {/* 5. Conditionally show the button */}
+              {isCustomer && (
+                <Link
+                  to={`/pet/${pet._id}/apply`}
+                  className="cursor-pointer w-full flex justify-center items-center gap-3 bg-amber-500 text-white font-bold py-4 px-6 rounded-lg text-lg hover:bg-amber-600 transition-colors duration-300 shadow-lg"
+                >
+                  <Heart size={22} />
+                  Start Adoption Process
+                </Link>
+              )}
             </div>
           </div>
         </div>

@@ -20,8 +20,9 @@ import AddPetModal from './components/AddPetModal'; // Import the modal
 // import initialPets from './data/petsdata'; // <-- 2. We no longer need this
 import ProtectedRoute from './components/ProtectedRoute';
 import Onboarding from './pages/Onboarding'; // for first time users
+import AdoptionForm from './pages/AdoptionForm'; // for Adoption form filling
 
-// ... (Home function remains the same, but we'll update its pet keys)
+
 function Home({ pets }) {
   return (
     <main>
@@ -31,7 +32,7 @@ function Home({ pets }) {
             {/* Hero Text */}
             <div className="text-center md:text-left">
             <img 
-                src="../public/paws.png" 
+                src="../paws.png" 
                 alt="Logo"
                 className="w-75 h-auto"
               />
@@ -253,6 +254,15 @@ function App() {
               element={
                 <ProtectedRoute>
                   <PetDetails pets={pets} />
+                </ProtectedRoute>
+              } 
+            />
+            {/* Apply for Adoption Route */}
+            <Route 
+              path="/pet/:id/apply" 
+              element={
+                <ProtectedRoute>
+                  <AdoptionForm pets={pets} />
                 </ProtectedRoute>
               } 
             />
