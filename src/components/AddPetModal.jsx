@@ -123,7 +123,7 @@ export default function AddPetModal({ show, onClose, onAddPet }) {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input name="name" label="Name" value={formData.name} onChange={handleChange} placeholder="Name of your pet" required />
-            <Select name="type" label="Type" value={formData.type} onChange={handleChange} options={['Dog', 'Cat', 'Bird', 'Rabbit']} required />
+            <Select name="type" label="Type" value={formData.type} onChange={handleChange} options={['Dog', 'Cat', 'Bird', 'Rabbit', 'Other']} required />
           </div>
 
           <Input name="breed" label="Breed" value={formData.breed} onChange={handleChange} placeholder="Breed of your pet" required />
