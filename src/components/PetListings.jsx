@@ -7,9 +7,10 @@ import { Link } from 'react-router-dom';
 
 // A single pet card component
 const PetCard = ({ pet }) => (
-  <Link to={`/pet/${pet.id}`}>
+  //modify to use _id
+  <Link to={`/pet/${pet._id}`}>
   <div className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 ease-in-out h-full flex flex-col">
-    <img className="w-full h-48 object-cover" src={pet.image || 'https://www.placehold.co/600x600.png?text=No+Image'} alt={pet.name} />
+    <img className="w-full h-48 object-cover" src={pet.image || 'https://www.placehold.co/600x600.png?text=No+Image+Available'} alt={pet.name} />
     <div className="p-4 flex flex-col flex-grow">
       <h3 className="text-xl font-bold text-gray-800">{pet.name}</h3>
       <p className="text-sm text-gray-600 mb-2">{pet.breed}</p>
@@ -137,7 +138,8 @@ function PetListings({ pets, onShowModal }) { // <-- Rename App to PetListings, 
         
         {filteredPets.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filteredPets.map(pet => <PetCard key={pet.id} pet={pet} />)}
+            {/* 2. Use pet._id for the key */}
+            {filteredPets.map(pet => <PetCard key={pet._id} pet={pet} />)}
           </div>
         ) : (
           <div className="text-center py-16">

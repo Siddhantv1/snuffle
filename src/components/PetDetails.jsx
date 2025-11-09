@@ -21,7 +21,7 @@ export default function PetDetails({ pets }) { // <-- Accept 'pets' prop
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const pet = pets.find(p=>p.id.toString()==id); // <-- Use 'pets' prop
+  const pet = pets.find(p => p._id.toString() == id); // use ._id for finding pets
   if (!pet){
     return (
         <div className='text-center p-10'>
