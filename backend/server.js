@@ -259,6 +259,21 @@ app.patch('/api/pets/:id', clerkAuth, uploadPetImage.single('image'), async (req
 });
 
 
+// new GET for "MY APPLICATIONS" ROuTE
+app.get('/api/applications/my-applications', clerkAuth, async (req, res) => {
+  try {
+    const { userId } = req.auth;
+
+    const applications = await AdoptionApplication.find({ applicantId: userId })
+      .sort({ createdAt: -1 }) // Show newest first
+      .populate('pet'); // <-- This is the magic! It fetches the pet data.
+
+    res.json(applications);
+  } catch (err) {
+    console.error('My Applications error:', err);
+    res.status(500).json({ error: 'Failed to fetch your applications.' });
+  }
+});
 
 // --- Start the Server ---
 app.listen(PORT, () => {

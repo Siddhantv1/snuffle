@@ -25,6 +25,7 @@ import AdoptionForm from './pages/AdoptionForm'; // for Adoption form filling
 //import PetScanner from './pages/PetScanner'; // for ML model (Later addition)
 import MyListings from './pages/MyListings'; // for My Listings Page
 import EditPet from './pages/EditPet'; //for editing the pet details
+import MyApplications from './pages/MyApplications'; // for viewing user's sent adoption requests
 
 function Home({ pets }) {
   return (
@@ -295,6 +296,15 @@ function App() {
               element={
                 <ProtectedRoute>
                   <MyListings />
+                </ProtectedRoute>
+              } 
+            />
+            {/* Route for viewing Adoption Applications */}
+            <Route 
+              path="/my-applications" 
+              element={
+                <ProtectedRoute>
+                  <MyApplications />
                 </ProtectedRoute>
               } 
             />
