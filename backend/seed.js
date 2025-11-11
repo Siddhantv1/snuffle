@@ -3,8 +3,8 @@ import 'dotenv/config';
 import Pet from './models/Pet.js'; // Import our Pet model
 import allPets from '../src/data/petsdata.js'; // Import the static pet data
 
-// --- PASTE YOUR USER ID HERE ---
-const YOUR_USER_ID = 'user_35AKDVwfmPhDdp9KIB8UEILJu7i'; 
+
+const YOUR_USER_ID = 'user_35FCYjxhvorDWUdC6mXJ54AL28v'; 
 // ---------------------------------
 
 if (!YOUR_USER_ID.startsWith('user_')) {
