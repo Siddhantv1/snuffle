@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './index.css';
-import { PawPrint, Heart, ClipboardList, Users, Search, ArrowRight } from 'lucide-react';
+import { Heart, ClipboardList, Users, Search, ArrowRight, ScanSearch } from 'lucide-react';
 import { Routes, Route, Link } from 'react-router-dom';
 
 // 2. Import Clerk components
@@ -11,7 +11,8 @@ import {
   UserButton,
   SignIn,
   SignUp,
-  useAuth // <-- 1. Import useAuth to check login status
+  useAuth, // <-- 1. Import useAuth to check login status
+  useUser // for rehomer's Listing Pages
 } from "@clerk/clerk-react";
 
 import PetListings from './components/PetListings';
@@ -21,7 +22,9 @@ import AddPetModal from './components/AddPetModal'; // Import the modal
 import ProtectedRoute from './components/ProtectedRoute';
 import Onboarding from './pages/Onboarding'; // for first time users
 import AdoptionForm from './pages/AdoptionForm'; // for Adoption form filling
-
+//import PetScanner from './pages/PetScanner'; // for ML model (Later addition)
+import MyListings from './pages/MyListings'; // for My Listings Page
+import EditPet from './pages/EditPet'; //for editing the pet details
 
 function Home({ pets }) {
   return (
@@ -141,8 +144,11 @@ function App() {
   const [pets, setPets] = useState([]); // <-- 4. Start with an empty array
   const [showModal, setShowModal] = useState(false);
   const { isSignedIn } = useAuth(); // Get auth status
-
-  // 5. ADD THIS useEffect TO FETCH PETS
+  const { user } = useUser();
+  const isRehomer = user?.unsafeMetadata?.role === 'rehomer';
+  const isCustomer = user?.unsafeMetadata?.role === 'customer';
+ 
+  // useEffect TO FETCH PETS
   useEffect(() => {
     // This function will run once when the app loads,
     // regardless of login status.
@@ -200,6 +206,22 @@ function App() {
               <div className="hidden md:flex items-center space-x-8 px-8">
                 <Link to="/" className="text-gray-700 hover:text-amber-600 transition-colors">Home</Link>
                 <Link to="/petlistings" className="text-gray-700 hover:text-amber-600 transition-colors">Pet Listings</Link>
+                
+                {/* Extra Link for Role Specific */}
+                <SignedIn>
+                  {isRehomer && (
+                    <Link to="/my-listings" className="text-gray-700 hover:text-amber-600 transition-colors">My Listings</Link>
+                  )}
+                  {isCustomer && (
+                    <Link to="/my-applications" className="text-gray-700 hover:text-amber-600 transition-colors">My Applications</Link>
+                  )}
+                </SignedIn>
+                {/* For ML model (Later addition) */}
+                {/* <Link to="/pet-scanner" className="flex items-center gap-1 text-gray-700 hover:text-amber-600 transition-colors">
+                  <ScanSearch size={16} />
+                  Scanner
+                </Link> */}
+
                 <Link to="/contact" className="text-gray-700 hover:text-amber-600 transition-colors">Contact us</Link>
               </div>
 
@@ -266,6 +288,37 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+
+            {/* For viewing My Listings */}
+            <Route 
+              path="/my-listings" 
+              element={
+                <ProtectedRoute>
+                  <MyListings />
+                </ProtectedRoute>
+              } 
+            />
+
+            {/* For editing pet details  */}
+            <Route 
+              path="/pet/:id/edit" 
+              element={
+                <ProtectedRoute>
+                  <EditPet />
+                </ProtectedRoute>
+              } 
+            />
+
+            
+            {/* For ML model (Later addition) prediction */}
+            {/* <Route 
+              path="/pet-scanner" 
+              element={
+                <ProtectedRoute>
+                  <PetScanner />
+                </ProtectedRoute>
+              } 
+            /> */}
              
             {/* Clerk Auth Routes */}
             <Route 

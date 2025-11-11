@@ -34,7 +34,45 @@ app.get('/api/pets', async (req, res) => {
   }
 });
 
-// --- 2. UPDATE THE "ADD PET" ROUTE ---
+// -- NEW "MY-LISTINGS" ROute for rehomers --
+app.get('/api/pets/my-listings', clerkAuth, async (req, res) => {
+  try {
+    const { userId } = req.auth;
+    const pets = await Pet.find({ rehomerId: userId }).sort({ createdAt: -1 });
+    res.json(pets);
+  } catch (err) {
+    console.error('My Listings error:', err);
+    res.status(500).json({ error: 'Failed to fetch your listings.' });
+  }
+});
+
+
+// -- GET PET AS THE REHOMER -- 
+// This route is protected so only the owner can see the edit page
+app.get('/api/pets/:id', clerkAuth, async (req, res) => {
+  try {
+    const { userId } = req.auth;
+    const { id } = req.params;
+
+    const pet = await Pet.findById(id);
+
+    if (!pet) {
+      return res.status(404).json({ error: 'Pet not found.' });
+    }
+
+    // Security check: Is this user the owner?
+    if (pet.rehomerId !== userId) {
+      return res.status(403).json({ error: 'Forbidden: You do not own this pet.' });
+    }
+
+    res.json(pet);
+  } catch (err) {
+    console.error('Get pet error:', err);
+    res.status(500).json({ error: 'Failed to fetch pet.' });
+  }
+});
+
+// --- THE "ADD PET" ROUTE ---
 // We add 'clerkAuth' first, then 'upload.single('image')'
 // 'uploadPetImage.single' tells multer to look for a file named "image"
 app.post('/api/pets', clerkAuth, uploadPetImage.single('image'), async (req, res) => {
@@ -47,7 +85,7 @@ app.post('/api/pets', clerkAuth, uploadPetImage.single('image'), async (req, res
       return res.status(403).json({ error: 'Only rehomers can add new pets.' });
     }
     
-    // 3. The file URL is now at req.file.path
+    //  The file URL is now at req.file.path
     //    The text fields are at req.body
     const newPet = new Pet({
       ...req.body,
@@ -97,7 +135,7 @@ app.post('/api/onboarding', clerkAuth, uploadCertificate.single('certificate'), 
   }
 });
 
-// New POST for listening to Applications
+// New POST ROUTE for listening to Applications
 app.post('/api/applications', clerkAuth, uploadIdProof.single('idProof'), async (req, res) => {
   try {
     const { userId } = req.auth;
@@ -143,6 +181,83 @@ app.post('/api/applications', clerkAuth, uploadIdProof.single('idProof'), async 
     res.status(500).json({ error: 'Failed to submit application', details: err.message });
   }
 });
+
+// --- "DELETE PET" ROUTE ---
+app.delete('/api/pets/:id', clerkAuth, async (req, res) => {
+  try {
+    const { userId } = req.auth;
+    const { id } = req.params;
+
+    // Find the pet first to make sure the user owns it
+    const pet = await Pet.findById(id);
+
+    if (!pet) {
+      return res.status(404).json({ error: 'Pet not found.' });
+    }
+
+    if (pet.rehomerId !== userId) {
+      // This is not their pet!
+      return res.status(403).json({ error: 'Forbidden: You do not own this pet.' });
+    }
+
+    // Okay, they own it so delete it.
+    await Pet.findByIdAndDelete(id);
+    
+    // We should also delete all pending applications for this pet
+    await AdoptionApplication.deleteMany({ pet: id });
+
+    res.status(200).json({ success: true, message: 'Pet deleted successfully.' });
+
+  } catch (err) {
+    console.error('Delete pet error:', err);
+    res.status(500).json({ error: 'Failed to delete pet.' });
+  }
+});
+
+
+// --- REHOMER's "UPDATE PET" ROUTE ---
+// We use PATCH because we're only partially updating.
+// It also handles an optional new image upload.
+app.patch('/api/pets/:id', clerkAuth, uploadPetImage.single('image'), async (req, res) => {
+  try {
+    const { userId } = req.auth;
+    const { id } = req.params;
+
+    // Find the pet to ensure ownership
+    const pet = await Pet.findById(id);
+    if (!pet) {
+      return res.status(404).json({ error: 'Pet not found.' });
+    }
+    if (pet.rehomerId !== userId) {
+      return res.status(403).json({ error: 'Forbidden: You do not own this pet.' });
+    }
+
+    // Prepare the updates
+    const updates = {
+      ...req.body,
+    };
+
+    // If a new image was uploaded, add its path to the updates
+    if (req.file) {
+      updates.image = req.file.path;
+      // Note: We're not deleting the old image from Cloudinary here
+      // for simplicity, but a real app would do that.
+    }
+
+    // Find the pet by its ID and update it with the new data
+    const updatedPet = await Pet.findByIdAndUpdate(
+      id,
+      updates,
+      { new: true } // This option returns the updated document
+    );
+
+    res.status(200).json(updatedPet);
+  } catch (err) {
+    console.error('Update pet error:', err);
+    res.status(500).json({ error: 'Failed to update pet.' });
+  }
+});
+
 
 
 // --- Start the Server ---
