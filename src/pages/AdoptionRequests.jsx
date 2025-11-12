@@ -250,7 +250,7 @@ export default function AdoptionRequests() {
                     <td className="px-6 py-4 whitespace-nowrap text-right">
                       <button 
                         onClick={() => setSelectedApp(app)}
-                        className="text-amber-600 hover:text-amber-900 font-medium"
+                        className="text-amber-600 hover:text-amber-900 font-medium cursor-pointer"
                       >
                         View Details
                       </button>
