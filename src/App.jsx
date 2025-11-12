@@ -22,7 +22,7 @@ import AddPetModal from './components/AddPetModal'; // Import the modal
 import ProtectedRoute from './components/ProtectedRoute';
 import Onboarding from './pages/Onboarding'; // for first time users
 import AdoptionForm from './pages/AdoptionForm'; // for Adoption form filling
-//import PetScanner from './pages/PetScanner'; // for ML model (Later addition)
+import PetScanner from './pages/PetScanner'; // for ML model 
 import MyListings from './pages/MyListings'; // for My Listings Page
 import EditPet from './pages/EditPet'; //for editing the pet details
 import MyApplications from './pages/MyApplications'; // for viewing user's sent adoption requests
@@ -221,13 +221,13 @@ function App() {
                     <Link to="/my-applications" className="text-gray-700 hover:text-amber-600 transition-colors">My Applications</Link>
                   )}
                 </SignedIn>
-                {/* For ML model (Later addition) */}
-                {/* <Link to="/pet-scanner" className="flex items-center gap-1 text-gray-700 hover:text-amber-600 transition-colors">
+                {/* For ML model */}
+                <Link to="/pet-scanner" className="flex items-center gap-1 text-gray-700 hover:text-amber-600 transition-colors">
                   <ScanSearch size={16} />
                   Scanner
-                </Link> */}
+                </Link>
 
-                <Link to="/contact" className="text-gray-700 hover:text-amber-600 transition-colors">Contact us</Link>
+                {/* <Link to="/contact" className="text-gray-700 hover:text-amber-600 transition-colors">Contact us</Link> */}
               </div>
 
               {/* Clerk Sign In / User Button */}
@@ -334,15 +334,15 @@ function App() {
             />
 
             
-            {/* For ML model (Later addition) prediction */}
-            {/* <Route 
+            {/* For ML model prediction */}
+            <Route 
               path="/pet-scanner" 
               element={
                 <ProtectedRoute>
                   <PetScanner />
                 </ProtectedRoute>
               } 
-            /> */}
+            />
              
             {/* Clerk Auth Routes */}
             <Route 
