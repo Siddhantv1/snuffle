@@ -1,94 +1,158 @@
-# Snuffle: Your Trusted Platform for Ethical Pet Adoption
+# Snuffle 🐾
 
-Snuffle is a pet adoption platform built with React + Vite on the frontend and a Node/Express backend. The app uses Clerk for authentication and supports a first-time onboarding flow where users set their role and location.
+Snuffle is a modern, full-stack platform designed to connect pet rehomers (shelters and rescues) with potential adopters. It's built with a secure, role-based React frontend, a Node.js backend API, and features a separate Python microservice for AI-powered pet breed identification.
 
-This README explains how to run the project locally, what environment variables are required, and where key behaviors (auth + onboarding) are implemented.
+## Key Features
 
-## Table of contents
-- Project highlights
-- Requirements
-- Local setup
-- Environment variables
-- Running the app
-- Key files & architecture
-- Onboarding & Clerk notes
-- Troubleshooting
-- Next steps / improvements
+  * **Dual-Role User System:** Users can sign up as either a "Customer" (Adopter) or a "Rehomer" (Shelter/Store).
+  * **Legal Verification:** Rehomers would need to upload the Animal Welfare Board registration certificate of their store/rescue shelter when they sign up for legality of selling or fostering pets.
+  * **Role-Based Permissions:** The UI and API adapt to the user's role. Rehomers can add pets, while Customers can apply to adopt them.
+  * **Full CRUD Operations:** Rehomers have a "My Listings" page to **C**reate, **R**ead, **U**pdate, and **D**elete their pet listings.
+  * **Complete Adoption Workflow:**
+      * Customers fill out a detailed adoption application form and upload a valid proof of residence.
+      * They can check the "My Applications" page to track the status (Pending, Approved, Rejected) of their applications.
+      * Rehomers have an "Adoption Requests" page to review all applications and approve or reject them.
+      * Rehomers cannot seek to adopt pets on our platform, to safeguard animals from re-sale and breeding abuse.
+  * **Permanent Cloud Storage:** All user-uploaded images (pets, certificates, IDs) are saved to Cloudinary for persistent, fast-loading storage.
+  * **AI Pet Scanner:** A "Pet Scanner" feature allows any logged-in user to upload a picture of a pet and get a real-time breed prediction from a Keras/TensorFlow model.
+  * **User Friendly:** Intuitive UI for easy navigation.
+-----
 
 ## Tech Stack
-- Frontend: React (Vite), Tailwind CSS, Clerk for auth
-- Backend: Node, Express
-- Cloud Storage: Cloudinary
-- Database: MongoDB Atlas
 
-## Requirements
-- Node.js (v16+ recommended)
-- npm or yarn
+This project runs as a **microservice architecture** with three separate servers.
 
-## Local setup
-1. Clone the repository
-```git
-	git clone https://github.com/siddhantv1/snuffle.git
-	cd Snuffle
+### 1\. Frontend (Vite + React)
+
+  * **Framework:** React 19
+  * **Build Tool:** Vite
+  * **Styling:** Tailwind CSS
+  * **Authentication:** Clerk (user management, and session tokens)
+  * **Routing:** React Router v7
+  * **UI:** Headless UI & Lucide Icons
+
+### 2\. Backend (Node.js API)
+
+  * **Runtime:** Node.js
+  * **Framework:** Express
+  * **Database:** MongoDB with Mongoose (for Pets and Applications)
+  * **Authentication:** Clerk (backend SDK for validating user tokens and roles)
+  * **File Storage:** Cloudinary (via `multer` and `multer-storage-cloudinary`)
+
+### 3\. ML Microservice (Python)
+
+  * **Framework:** Flask
+  * **ML Library:** TensorFlow / Keras
+  * **Model:** Pre-trained InceptionV3 model for dog breed classification.
+
+-----
+
+## Getting Started
+
+To run this project locally, you must run all three servers simultaneously.
+
+### 0. Clone the Repository
+
+```bash
+git clone https://github.com/siddhantv1/snuffle.git
+cd snuffle
 ```
-2. Install dependencies
-```javascript
-	npm install
-	cd backend
-	npm install
+
+
+### 1\. Environment Variables
+
+You will need environment variables from three different sources.
+
+**A. Frontend (Root Folder): `.env.local`**
+
 ```
-3. Create environment variables
+# Get this from your Clerk Dashboard -> API Keys
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 
-	Copy or create `.env.local` in the project root for the frontend and set the Clerk publishable key. The repo includes an example `.env.local` entry (seen in development), but you should set your own keys from Clerk.
-
-	- Frontend `.env.local` (root):
-	  VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
-	  VITE_CLERK_AFTER_SIGN_UP_URL=/onboarding
-
-	- Backend `backend/.env`:
-	  CLERK_SECRET_KEY=sk_test_...
-	  CLOUDINARY_URL=... 
-
-	Note: You can obtain keys from the Clerk dashboard. For local development use your Clerk test keys.
-
-## Seed The Database
-You need to seed the database by repopulating database with sample entries.
+# Clerk redirect routes
+VITE_CLERK_AFTER_SIGN_IN_URL=/petlistings
+VITE_CLERK_AFTER_SIGN_UP_URL=/onboarding
 ```
+
+**B. Backend (`/backend` folder): `.env`**
+
+```env
+# Get this from MongoDB Atlas -> Connect -> Drivers
+MONGO_URI=mongodb+srv://...
+
+# Get this from Clerk Dashboard -> API Keys
+CLERK_SECRET_KEY=sk_test_...
+
+# Get these from your Cloudinary Dashboard
+CLOUDINARY_CLOUD_NAME=...
+CLOUDINARY_API_KEY=...
+CLOUDINARY_API_SECRET=...
+```
+
+**C. ML Server (`/ml-server` folder):**
+
+  * No `.env` file needed, but you **must** place your trained model and class names file in this folder:
+      * `dog_breed_classifier_inceptionv3_v1.keras`
+      * `class_names.json` (the 120-breed list generated from `Snuffle.ipynb`)
+
+-----
+
+### 2\. Running the Application
+
+Open **three** separate terminals.
+
+**Terminal 1: Start the Frontend (Vite)**
+
+```bash
+# In the root 'snuffle' folder
+npm install
+npm run dev
+# App will be running at http://localhost:5173
+```
+
+**Terminal 2: Start the Backend (Node.js)**
+
+```bash
+# In the 'snuffle/backend' folder
+cd backend
+npm install
+node server.js
+# API will be running at http://localhost:5001
+```
+
+**Terminal 3: Start the ML Server (Flask)**
+
+```bash
+# In the 'snuffle/ml-server' folder
+cd ml-server
+python3 -m venv venv
+source venv/bin/activate  # (or .\venv\Scripts\activate on Windows)
+pip install -r requirements.txt
+flask run
+# ML service will be running at default PORT http://localhost:5000
+```
+
+Once all three servers are running, you can access the application at `http://localhost:5173`.
+
+
+## Extra notes
+In case you need to clean the database from orphaned data or repopulate it with sample data easily, follow these instructions.
+
+### Cleaning the Database:
+```bash
+# navigate to /backend directory
+cd backend
+
+# run script (clean.js)
+npm run clean
+
+```
+
+### Repopulating the Database:
+
+```bash
+cd backend
+# runs seed.js, sample data is stored at  /src/data/petsdata.js
 npm run seed
+
 ```
-
-## Running the app
-1. Start the backend (from `backend/`):
-```
-	cd backend
-	node server
-```
-	The backend runs on port 5001 by default and exposes endpoints like `/api/pets` and `/api/pets` POST for creating pets (protected by Clerk middleware).
-
-2. Start the frontend (from project root):
-```
-	npm run dev
-```
-	The frontend uses Vite and runs on port 5173 (default). Open http://localhost:5173
-
-## Key files & architecture
-- `src/main.jsx` — app bootstrap, wraps `App` with `BrowserRouter` and `ClerkProvider`.
-- `src/App.jsx` — main layout, routes, public & protected routes and Clerk `SignIn`/`SignUp` routes.
-- `src/components/ProtectedRoute.jsx` — shows sign-in modal for unauthenticated users and protects pages; used to gate `PetListings`, `PetDetails`, and `Onboarding`.
-- `src/pages/Onboarding.jsx` — collects simple onboarding info (role, location) and saves it to Clerk's metadata.
-- `backend/server.js` — Express server with Clerk middleware protecting certain routes.
-
-## Onboarding & Clerk notes
-- The app uses Clerk for auth. Make sure you set `VITE_CLERK_PUBLISHABLE_KEY` (frontend) and `CLERK_SECRET_KEY` (backend).
-- To ensure client-side redirects (so after sign-up Clerk redirects to `/onboarding` without a full page reload), the `ClerkProvider` should be passed React Router's `navigate` function. Check `src/main.jsx` for a wrapper that passes the `navigate` prop into `ClerkProvider`.
-- The app stores onboarding data using `user.update({ unsafeMetadata: { role, location } })` in `Onboarding.jsx`. The `ProtectedRoute` can (and should) check these fields and redirect users who haven't completed onboarding to `/onboarding`.
-
-## Troubleshooting
-- If users are redirected to `/` after sign-up instead of `/onboarding`:
-  - Ensure `ClerkProvider` receives a navigate function from React Router (see `main.jsx`).
-  - Confirm `VITE_CLERK_AFTER_SIGN_UP_URL` is set to `/onboarding` (or set the dashboard redirect) and that Clerk initialization is successful.
-  - Check browser console/network for any Clerk initialization errors.
-
-- If `user.update` in `Onboarding.jsx` fails:
-  - Ensure your Clerk keys are correct and the backend is configured properly.
-  - Inspect network requests and the console for errors.
