@@ -39,6 +39,28 @@ const StatusBadge = ({ status }) => {
 const ApplicationCard = ({ application }) => {
   const { pet } = application;
 
+  //safety check for Deleted or Not Found Pets
+  if (!pet) {
+    return (
+      <div className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col sm:flex-row border-l-4 border-gray-400">
+        <div className="p-5 w-full">
+          <div className="flex justify-between items-start">
+            <h3 className="text-2xl font-bold text-gray-500 italic">Pet No Longer Available</h3>
+            <StatusBadge status={application.status} />
+          </div>
+          <p className="text-sm text-gray-500 mt-2">
+            The pet associated with this application has been deleted.
+          </p>
+          <div className="border-t border-gray-200 mt-4 pt-4">
+            <p className="text-sm text-gray-500">
+              Submitted on: {new Date(application.createdAt).toLocaleDateString()}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col sm:flex-row">
       {/* Pet Image */}
