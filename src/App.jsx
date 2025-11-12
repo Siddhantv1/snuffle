@@ -26,6 +26,7 @@ import AdoptionForm from './pages/AdoptionForm'; // for Adoption form filling
 import MyListings from './pages/MyListings'; // for My Listings Page
 import EditPet from './pages/EditPet'; //for editing the pet details
 import MyApplications from './pages/MyApplications'; // for viewing user's sent adoption requests
+import AdoptionRequests from './pages/AdoptionRequests'; // to approve/decline incoming requests
 
 function Home({ pets }) {
   return (
@@ -211,7 +212,10 @@ function App() {
                 {/* Extra Link for Role Specific */}
                 <SignedIn>
                   {isRehomer && (
+                    <>
                     <Link to="/my-listings" className="text-gray-700 hover:text-amber-600 transition-colors">My Listings</Link>
+                    <Link to="/adoption-requests" className="text-gray-700 hover:text-amber-600 transition-colors">Adoption Requests</Link>
+                    </>
                   )}
                   {isCustomer && (
                     <Link to="/my-applications" className="text-gray-700 hover:text-amber-600 transition-colors">My Applications</Link>
@@ -315,6 +319,16 @@ function App() {
               element={
                 <ProtectedRoute>
                   <EditPet />
+                </ProtectedRoute>
+              } 
+            />
+
+            {/* FOr viewing Incoming Adoption Requests */}
+            <Route 
+              path="/adoption-requests" 
+              element={
+                <ProtectedRoute>
+                  <AdoptionRequests />
                 </ProtectedRoute>
               } 
             />

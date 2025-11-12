@@ -275,6 +275,61 @@ app.get('/api/applications/my-applications', clerkAuth, async (req, res) => {
   }
 });
 
+// --- 1. ADD NEW "RECEIVED REQUESTS" ROUTE (for Rehomers) ---
+app.get('/api/applications/received', clerkAuth, async (req, res) => {
+  try {
+    const { userId } = req.auth;
+
+    // Find all applications where the rehomerId matches the logged-in user
+    const applications = await AdoptionApplication.find({ rehomerId: userId })
+      .sort({ createdAt: -1 })
+      .populate('pet'); // Get the pet info for each application
+
+    res.json(applications);
+  } catch (err) {
+    console.error('Received Applications error:', err);
+    res.status(500).json({ error: 'Failed to fetch received applications.' });
+  }
+});
+
+// --- 2. ADD NEW "UPDATE STATUS" ROUTE (for Rehomers) ---
+app.patch('/api/applications/:id/status', clerkAuth, async (req, res) => {
+  try {
+    const { userId } = req.auth;
+    const { id } = req.params; // The ID of the application
+    const { status } = req.body; // The new status ("Approved" or "Rejected")
+
+    if (!status || !['Approved', 'Rejected'].includes(status)) {
+      return res.status(400).json({ error: 'Invalid status provided.' });
+    }
+
+    // Find the application
+    const application = await AdoptionApplication.findById(id);
+    if (!application) {
+      return res.status(404).json({ error: 'Application not found.' });
+    }
+
+    // Security check: Make sure the logged-in user is the rehomer for this application
+    if (application.rehomerId !== userId) {
+      return res.status(403).json({ error: 'Forbidden: You are not the rehomer for this application.' });
+    }
+
+    // Update the status
+    application.status = status;
+    const updatedApplication = await application.save();
+    
+    // We populate 'pet' on the returned object so the frontend can update
+    await updatedApplication.populate('pet'); 
+
+    res.status(200).json(updatedApplication);
+
+  } catch (err) {
+    console.error('Update status error:', err);
+    res.status(500).json({ error: 'Failed to update application status.' });
+  }
+});
+
+
 // --- Start the Server ---
 app.listen(PORT, () => {
   console.log(`Backend server is running on http://localhost:${PORT}`);
