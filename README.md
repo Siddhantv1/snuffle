@@ -65,7 +65,7 @@ You will need environment variables from three different sources.
 
 **A. Frontend (Root Folder): `.env.local`**
 
-```
+```env
 # Get this from your Clerk Dashboard -> API Keys
 VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 
