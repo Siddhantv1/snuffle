@@ -22,13 +22,13 @@ function MyPetCard({ pet, onDeleteClick }) {
         <div className="flex gap-2">
           <Link 
             to = {`/pet/${pet._id}/edit`}
-            className="flex-1 inline-flex justify-center items-center gap-2 bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors cursor-pointer"
+            className="flex-1 inline-flex justify-center items-center gap-2 bg-amber-500 text-white font-bold py-2 px-4 rounded-4xl hover:bg-amber-600 transition-colors cursor-pointer"
           >
             <Edit size={16} /> Edit
           </Link>
           <button 
             onClick={() => onDeleteClick(pet._id, pet.name)}
-            className="flex-1 inline-flex justify-center items-center gap-2 bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-600 transition-colors cursor-pointer"
+            className="flex-1 inline-flex justify-center items-center gap-2 bg-gray-200 text-red-700 font-bold py-2 px-4 rounded-4xl hover:text-white hover:bg-red-600 transition-colors cursor-pointer"
           >
             <Trash2 size={16} /> Delete
           </button>
@@ -108,7 +108,7 @@ export default function MyListings() {
         <h1 className="text-4xl font-extrabold text-gray-800">My Listings</h1>
         <Link 
           to="/petlistings" // This just goes to the main page where the AddPetModal lives
-          className="inline-flex items-center gap-2 bg-green-600 cursor-pointer text-white font-bold py-3 px-6 rounded-lg hover:bg-green-500 transition-colors duration-300 shadow-md"
+          className="inline-flex items-center gap-2 bg-green-600 cursor-pointer text-white font-bold py-3 px-6 rounded-xl hover:bg-green-500 transition-colors duration-300 shadow-md"
         >
           <Plus size={20} />
           Add New Pet

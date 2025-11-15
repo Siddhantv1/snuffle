@@ -59,7 +59,7 @@ export default function PetScanner() {
     <div className="bg-amber-50 min-h-screen py-12">
       <div className="container mx-auto px-4 max-w-2xl">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-8">
-          <h1 className="text-3xl font-extrabold text-gray-900 mb-2 text-center">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">
             Animal Scanner
           </h1>
           <p className="text-lg text-gray-600 mb-6 text-center">
@@ -87,10 +87,10 @@ export default function PetScanner() {
             ) : (
               <div className="text-center text-gray-500 z-0">
                 <UploadCloud className="mx-auto h-12 w-12 text-amber-500" />
-                <span className="mt-2 block text-lg font-medium">
+                <span className="mt-2 block text-lg font-light">
                   Click to upload a picture
                 </span>
-                <span className="text-sm">PNG or JPG</span>
+                <span className="text-sm font-extralight">PNG or JPG</span>
               </div>
             )}
           </label>

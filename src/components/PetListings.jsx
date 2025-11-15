@@ -20,7 +20,7 @@ const PetCard = ({ pet }) => (
         <span>{pet.gender}</span>
       </div>
       <p className="text-gray-700 text-sm mb-4 h-10 overflow-hidden text-ellipsis">{pet.description}</p>
-      <button className="cursor-pointer w-full bg-amber-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-amber-600 transition-colors duration-300 mt-auto">
+      <button className="cursor-pointer w-full bg-amber-500 text-white font-bold py-2 px-4 rounded-3xl hover:bg-amber-600 transition-colors duration-300 mt-auto">
         Adopt Me
       </button>
     </div>
@@ -127,7 +127,7 @@ function PetListings({ pets, onShowModal }) { // <-- Rename App to PetListings, 
         <div className="mb-6 flex justify-end">
             <button 
                 onClick={onShowModal}
-                className="inline-flex items-center gap-2 bg-green-600 cursor-pointer text-white font-bold py-3 px-6 rounded-lg hover:bg-green-500 transition-colors duration-300 shadow-md"
+                className="inline-flex items-center gap-2 bg-green-600 cursor-pointer text-white font-bold py-3 px-6 rounded-xl hover:bg-green-500 transition-colors duration-300 shadow-md"
             >
                 <Plus size={20} />
                 Add New Pet

@@ -41,7 +41,7 @@ function Home({ pets }) {
                 alt="Logo"
                 className="w-75 h-auto"
               />
-              <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
                 Find Your New<br />
                 <span className="text-amber-500">Best Friend</span>
               </h1>
