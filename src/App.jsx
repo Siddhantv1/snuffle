@@ -149,7 +149,8 @@ function Home({ pets }) {
               <p className="text-xl text-gray-600 mb-10 max-w-lg mx-auto md:mx-0">
                 Contact us via email, Instagram, Facebook or our Twitter.
               </p>
-              {/* <Input name="name" label="Name" placeholder="Name of your pet" required /> */}
+              <input name="text" label="Name" placeholder="Write something..." className='bg-white px-3 py-2 border-2 border-amber-700 rounded-tl-2xl rounded-bl-2xl' />
+              <a href="https://mail.google.com/mail/u/0/#inbox?compose=new" target="_blank" rel="noopener noreferrer" className='px-3 py-2.5 bg-amber-600 border-2 border-amber-700 hover:bg-amber-400 rounded-tr-2xl rounded-br-2xl text-white cursor-pointer'>Email Us</a>
             </div>
             
             {/* Questions Image */}
