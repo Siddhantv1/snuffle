@@ -1,4 +1,4 @@
-# Snuffle 🐾
+# 🐾 Snuffle
 
 Snuffle is a modern, full-stack platform designed to connect pet rehomers (shelters and rescues) with potential adopters. It's built with a secure, role-based React frontend, a Node.js backend API, and features a separate Python microservice for AI-powered pet breed identification.
 
