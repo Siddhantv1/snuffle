@@ -136,6 +136,33 @@ function Home({ pets }) {
             </Link>
           </div>
         </section>
+
+      {/* Contact us section */}
+      <section className="min-h-screen flex items-center pt-24 pb-12">
+          <div className="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+            {/* Feedback Text */}
+            <div className="text-center md:text-left">
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
+                Have Feedback?<br />
+                <span className="text-amber-500">We'd love to hear from you.</span>
+              </h1>
+              <p className="text-xl text-gray-600 mb-10 max-w-lg mx-auto md:mx-0">
+                Contact us via email, Instagram, Facebook or our Twitter.
+              </p>
+              {/* <Input name="name" label="Name" placeholder="Name of your pet" required /> */}
+            </div>
+            
+            {/* Questions Image */}
+            <div className="flex justify-center">
+              <img 
+                src="https://images.unsplash.com/photo-1600369671608-7aad7dac5236?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                alt="Happy dog"
+                className="rounded-3xl border-amber-600 border-3 w-100 h-100 object-cover"
+              />
+            </div>
+          </div>
+        </section>
+
       </main>
   );
 }
@@ -366,9 +393,9 @@ function App() {
             </Link>
             <p className="mb-4">Helping you find your new best friend.</p>
             <div className="flex justify-center space-x-6 mb-6">
-              <a href="#" className="hover:text-white">Facebook</a>
-              <a href="#" className="hover:text-white">Instagram</a>
-              <a href="#" className="hover:text-white">Twitter</a>
+              <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-white">Facebook</a>
+              <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"className="hover:text-white">Instagram</a>
+              <a href="https://x.com" target="_blank" rel="noopener noreferrer" className="hover:text-white">Twitter</a>
             </div>
             <p className="text-gray-500 text-sm">&copy; {new Date().getFullYear()} Snuffle. All rights reserved.</p>
           </div>
