@@ -153,7 +153,7 @@ function PetListings({ pets, onShowModal }) { // <-- Rename App to PetListings, 
             <p className="text-gray-500 mt-2">Try adjusting your filters to find more furry friends.</p>
             <button 
               onClick={handleClearFilters} 
-              className="mt-6 bg-amber-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-amber-600 transition-colors duration-300"
+              className="mt-6 bg-amber-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-amber-600 transition-colors duration-300 cursor-pointer"
             >
               Clear All Filters
             </button>
