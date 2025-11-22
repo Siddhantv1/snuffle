@@ -69,38 +69,70 @@ function Home({ pets }) {
         </section>
 
         {/* --- Why Adopt? Section --- */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-6 text-center">
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">Why Choose Snuffle?</h2>
-            <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">We make the adoption process simple, joyful, and supportive.</p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Card 1 */}
-              <div className="bg-amber-50 rounded-2xl p-8 shadow-md">
-                <div className="inline-block bg-amber-100 text-amber-600 rounded-full p-4 mb-4">
-                  <Heart className="h-8 w-8" />
-                </div>
-                <h3 className="text-2xl font-semibold text-gray-800 mb-2">Give a Second Chance</h3>
-                <p className="text-gray-600">Give a second chance to animals in need and help reduce pet overpopulation.</p>
-              </div>
-              {/* Card 2 */}
-              <div className="bg-amber-50 rounded-2xl p-8 shadow-md">
-                <div className="inline-block bg-amber-100 text-amber-600 rounded-full p-4 mb-4">
-                  <ClipboardList className="h-8 w-8" />
-                </div>
-                <h3 className="text-2xl font-semibold text-gray-800 mb-2">Simple Process</h3>
-                <p className="text-gray-600">Simple, transparent steps to bring home your companion. We guide you through every stage.</p>
-              </div>
-              {/* Card 3 */}
-              <div className="bg-amber-50 rounded-2xl p-8 shadow-md">
-                <div className="inline-block bg-amber-100 text-amber-600 rounded-full p-4 mb-4">
-                  <Users className="h-8 w-8" />
-                </div>
-                <h3 className="text-2xl font-semibold text-gray-800 mb-2">Join Our Community</h3>
-                <p className="text-gray-600">Help us care for animals, get support, and make a difference in your community.</p>
-              </div>
+        <section className="py-24 bg-white">
+      <div className="container mx-auto px-6 text-center">
+        <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Choose <span className='text-amber-600'>Snuffle?</span></h2>
+        <p className="text-lg text-gray-600 mb-16 max-w-2xl mx-auto">
+          We make the adoption process simple, joyful, and supportive.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          {/* card 1 chance */}
+          <div 
+            className="group relative h-[350px] rounded-3xl overflow-hidden shadow-lg cursor-pointer"
+            style={{ backgroundImage: `url('../caress.png')`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+          >
+            {/* Dark Overlay gradient: dark on hover\ */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-all duration-500 group-hover:from-black/95 group-hover:via-black/70"></div>
+            
+            {/* Content Container */}
+            <div className="absolute inset-0 p-8 flex flex-col justify-end text-left">
+              <h3 className="text-3xl font-bold text-white mb-2 translate-y-8 transition-all duration-500 group-hover:translate-y-0">
+                Give a Second Chance
+              </h3>
+              {/* Description: Hidden by default, slides up and fades in on hover */}
+              <p className="text-gray-200 text-lg opacity-0 translate-y-8 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 delay-100">
+                Give a second chance to animals in need and help reduce pet overpopulation.
+              </p>
             </div>
           </div>
-        </section>
+
+          {/* card 2 - process */}
+          <div 
+            className="group relative h-[350px] rounded-3xl overflow-hidden shadow-lg cursor-pointer"
+            style={{ backgroundImage: `url('../papers.png')`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-all duration-500 group-hover:from-sky-900/95 group-hover:via-sky-900/70"></div>
+            <div className="absolute inset-0 p-8 flex flex-col justify-end text-left">
+              <h3 className="text-3xl font-bold text-white mb-2 translate-y-8 transition-all duration-500 group-hover:translate-y-0">
+                Simple Process
+              </h3>
+              <p className="text-gray-200 text-lg opacity-0 translate-y-8 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 delay-100">
+                Simple, transparent steps to bring home your companion. We guide you through every stage.
+              </p>
+            </div>
+          </div>
+
+            {/* card 3 community */}
+          <div 
+            className="group relative h-[350px] rounded-3xl overflow-hidden shadow-lg cursor-pointer"
+            style={{ backgroundImage: `url('../community.png')`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-all duration-500 group-hover:from-amber-950/95 group-hover:via-amber-950/70"></div>
+            <div className="absolute inset-0 p-8 flex flex-col justify-end text-left">
+              <h3 className="text-3xl font-bold text-white mb-2 translate-y-8 transition-all duration-500 group-hover:translate-y-0">
+                Join Our Community
+              </h3>
+              <p className="text-gray-200 text-lg opacity-0 translate-y-8 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 delay-100">
+                Help us care for animals, get support, and make a difference in your community.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
 
         {/* --- Featured Pets Section --- */}
         <section className="py-20">
@@ -156,9 +188,9 @@ function Home({ pets }) {
             {/* Questions Image */}
             <div className="flex justify-center">
               <img 
-                src="https://images.unsplash.com/photo-1600369671608-7aad7dac5236?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                src="../feedback1.png" 
                 alt="Happy dog"
-                className="rounded-3xl border-amber-600 border-3 w-100 h-100 object-cover"
+                className="rounded-3xl border-amber-600 border-3 w-120 h-100 object-cover"
               />
             </div>
           </div>
